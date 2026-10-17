@@ -7,13 +7,13 @@ import Testing
 private let usable = CGRect(x: 0, y: 70, width: 1440, height: 800)
 private let sprite = CGRect(x: 60, y: 90, width: 120, height: 120)
 
-@Test func theSpriteItselfSits12PointsFromTheBottomRightCorner() {
+@Test func theSpriteItselfSits46PointsFromTheRightAnd42FromTheBottom() {
     let origin = DefaultPlacement.origin(usableArea: usable, spriteInWindow: sprite)
-    #expect(origin.x + sprite.maxX == usable.maxX - 12)
-    #expect(origin.y + sprite.minY == usable.minY + 12)
+    #expect(origin.x + sprite.maxX == usable.maxX - 46)
+    #expect(origin.y + sprite.minY == usable.minY + 42)
 }
 
-@Test func theMarginCanBeChanged() {
-    let origin = DefaultPlacement.origin(usableArea: usable, spriteInWindow: sprite, margin: 20)
-    #expect(origin == CGPoint(x: 1440 - 20 - 180, y: 70 + 20 - 90))
+@Test func theMarginsCanBeChanged() {
+    let origin = DefaultPlacement.origin(usableArea: usable, spriteInWindow: sprite, right: 20, bottom: 10)
+    #expect(origin == CGPoint(x: 1440 - 20 - 180, y: 70 + 10 - 90))
 }

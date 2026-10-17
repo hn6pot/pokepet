@@ -223,7 +223,7 @@ final class Loops {
         }
     }
 
-    /// The sprite itself 12 points from the bottom-right corner of the main screen (the one with the menu bar).
+    /// The sprite itself 46 points from the right and 42 from the bottom of the main screen (the one with the menu bar).
     private func placeAtDefault() {
         guard let screen = NSScreen.screens.first else { return }
         guard let species = appearance?.species,
