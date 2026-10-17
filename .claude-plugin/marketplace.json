@@ -1,0 +1,5 @@
+{
+  "name": "pokepet",
+  "owner": { "name": "hn6pot" },
+  "plugins": [{ "name": "pokepet", "source": "./mod" }]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "pokepet",
+  "version": "0.1.0",
+  "description": "Écrit l'état des conversations dans ~/.pokepet/ pour le compagnon Pokepet. N'affiche rien.",
+  "author": {
+    "name": "hn6pot"
+  }
+}

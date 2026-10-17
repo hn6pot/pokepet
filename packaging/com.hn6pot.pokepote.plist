@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.hn6pot.pokepote</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>@BINARY@</string>
+	</array>
+	<!-- Starts at login. -->
+	<key>RunAtLoad</key>
+	<true/>
+	<!-- Restarts only after a crash: « Quitter » (exit code 0) stays quit. -->
+	<key>KeepAlive</key>
+	<dict>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>LimitLoadToSessionType</key>
+	<string>Aqua</string>
+	<key>ProcessType</key>
+	<string>Interactive</string>
+</dict>
+</plist>
