@@ -51,6 +51,7 @@ final class MouseGestures {
         let menu = ContextMenu.build(
             appearance: appearance,
             anotherPokemon: { [weak loops] in loops?.anotherPokemon() },
+            defaultPosition: { [weak loops] in loops?.defaultPosition() },
             normalSize: { [weak loops] in loops?.normalSize() })
         NSMenu.popUpContextMenu(menu, with: event, for: view)
     }

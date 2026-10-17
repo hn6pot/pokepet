@@ -31,6 +31,8 @@ final class Loops {
     private var stepStart = Date()
     private var startX: CGFloat = 0
     private var generator = SystemRandomNumberGenerator()
+    /// The day's answer count, as last read: where « Un autre Pokémon » starts counting from.
+    private var dayResponses = 0
     var dragging = false
     private var lastHover: Hover?
 
@@ -63,6 +65,7 @@ final class Loops {
         let now = Date()
         let sessions = stateDirectory.sessions(now: now)
         let responses = DailyCounter.total(stateDirectory.counters(day: PokepetDay.key(now)))
+        dayResponses = responses
         let next = companion.update(
             now: now, urgency: MostUrgentState.compute(sessions), responses: responses,
             lastActivity: sessions.map(\.updatedAt).max(), choice: preferences.dailyChoice)
@@ -215,9 +218,22 @@ final class Loops {
     private func placeWindow() {
         if let position = preferences.position, NSScreen.screens.contains(where: { $0.visibleFrame.contains(position) }) {
             window.setFrameOrigin(position)
-        } else if let screen = NSScreen.main {
-            window.setFrameOrigin(CGPoint(x: screen.visibleFrame.maxX - window.frame.width - 20, y: screen.visibleFrame.minY + 20))
+        } else {
+            placeAtDefault()
         }
+    }
+
+    /// The sprite itself 12 points from the bottom-right corner of the main screen (the one with the menu bar).
+    private func placeAtDefault() {
+        guard let screen = NSScreen.screens.first else { return }
+        guard let species = appearance?.species,
+              let image = sprites.animation(.idle, species: species, direction: .front)?.images.first,
+              let sprite = view.silhouette(of: image)
+        else {
+            window.setFrameOrigin(CGPoint(x: screen.visibleFrame.maxX - window.frame.width, y: screen.visibleFrame.minY))
+            return
+        }
+        window.setFrameOrigin(DefaultPlacement.origin(usableArea: screen.visibleFrame, spriteInWindow: sprite))
     }
 
     // MARK: Called by the gestures
@@ -247,9 +263,18 @@ final class Loops {
     /// Draws another lineage for the day (kept until 4 a.m.), and shows it right away.
     func anotherPokemon() {
         guard let shown = appearance?.lineage else { return }
+        // The new Pokémon starts from zero: it evolves on the answers counted from now on.
         preferences.dailyChoice = DailyChoice(
-            day: PokepetDay.key(Date()), lineage: DailyDraw.other(than: shown, using: &generator))
+            day: PokepetDay.key(Date()), lineage: DailyDraw.other(than: shown, using: &generator),
+            startResponses: dayResponses)
         reload()
+    }
+
+    /// Forgets the remembered position and goes back to the bottom-right corner.
+    func defaultPosition() {
+        step = nil
+        preferences.position = nil
+        placeAtDefault()
     }
 
     func normalSize() {

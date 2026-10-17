@@ -49,3 +49,9 @@ func preferencesSavedByTheInstalledAppAreReadBack() {
     #expect(p.position == CGPoint(x: 120, y: 48))
     #expect(p.dailyChoice == DailyChoice(day: "2026-10-17", lineage: .ghost))
 }
+
+@Test func theChoiceRemembersItsStartingCount() {
+    let (p, _) = blankPreferences()
+    p.dailyChoice = DailyChoice(day: "2026-10-17", lineage: .dragon, startResponses: 23)
+    #expect(p.dailyChoice?.startResponses == 23)
+}

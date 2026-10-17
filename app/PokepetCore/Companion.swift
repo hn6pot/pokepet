@@ -52,9 +52,12 @@ public struct Companion: Sendable {
         now: Date, urgency: Urgency, responses: Int, lastActivity: Date?, choice: DailyChoice? = nil,
         calendar: Calendar = .current
     ) -> Appearance {
-        let stage = Stage(responses: responses)
         let day = PokepetDay.key(now, calendar: calendar)
-        let lineage = choice?.day == day ? choice!.lineage : DailyDraw.lineage(for: day)
+        let todaysChoice = choice?.day == day ? choice : nil
+        let lineage = todaysChoice?.lineage ?? DailyDraw.lineage(for: day)
+        // A Pokémon picked with « Un autre Pokémon » starts from zero.
+        let responses = max(0, responses - (todaysChoice?.startResponses ?? 0))
+        let stage = Stage(responses: responses)
         let species = lineage.species(at: stage)
         let display = urgency.display
 

@@ -17,6 +17,11 @@ final class SpriteView: NSView {
     /// The rectangle where the sprite is drawn: centred in the area below the bubble.
     var spriteFrame: CGRect {
         guard let image else { return .zero }
+        return frame(for: image)
+    }
+
+    /// Where `image` would be drawn: centred in the area below the bubble.
+    func frame(for image: CGImage) -> CGRect {
         let width = CGFloat(image.width) * scale, height = CGFloat(image.height) * scale
         let area = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height - bubbleHeight)
         return CGRect(x: area.midX - width / 2, y: area.midY - height / 2, width: width, height: height)
@@ -67,15 +72,20 @@ final class SpriteView: NSView {
     func hitsSprite(_ point: CGPoint) -> Bool {
         guard let image else { return false }
         if bubble && HitArea.isInCircle(point, frame: bubbleFrame) { return true }
+        guard let silhouette = silhouette(of: image) else { return false }
+        return silhouette.insetBy(dx: -2 * scale, dy: -2 * scale).contains(point)
+    }
+
+    /// The rectangle of `image`'s visible pixels, in view points; `nil` for an empty image.
+    func silhouette(of image: CGImage) -> CGRect? {
         let key = ObjectIdentifier(image)
         if visibleFrames[key] == nil { visibleFrames[key] = HitArea.visibleBounds(image) ?? .null }
-        guard let visible = visibleFrames[key], !visible.isNull else { return false }
+        guard let visible = visibleFrames[key], !visible.isNull else { return nil }
         // Image pixels (origin at the top left) → view points (origin at the bottom left).
-        let frame = spriteFrame
-        let silhouette = CGRect(
+        let frame = frame(for: image)
+        return CGRect(
             x: frame.minX + visible.minX * scale, y: frame.maxY - visible.maxY * scale,
             width: visible.width * scale, height: visible.height * scale)
-        return silhouette.insetBy(dx: -2 * scale, dy: -2 * scale).contains(point)
     }
 
     /// The first click acts right away, even if Poképote is not the active app.

@@ -151,3 +151,25 @@ func changingPokemonFlashes() {
         choice: DailyChoice(day: today, lineage: other), calendar: paris)
     #expect(changed.flash)
 }
+
+@Test func anotherPokemonStartsAgainFromZero() {
+    var c = Companion(launchDate: t0)
+    let today = PokepetDay.key(t0, calendar: paris)
+    let choice = DailyChoice(day: today, lineage: .dragon, startResponses: 23)
+    func at(_ responses: Int) -> Appearance {
+        c.update(now: t0, urgency: .resting, responses: responses, lastActivity: nil, choice: choice, calendar: paris)
+    }
+    let fresh = at(25)
+    #expect(fresh.stage == .one)
+    #expect(fresh.responses == 2)
+    #expect(at(53).stage == .two)
+    #expect(at(103).stage == .three)
+}
+
+@Test func aChoiceFromAnotherDayDoesNotShiftTheCount() {
+    var c = Companion(launchDate: t0)
+    let old = DailyChoice(day: "2026-10-01", lineage: .bagon, startResponses: 50)
+    let a = c.update(now: t0, urgency: .resting, responses: 35, lastActivity: nil, choice: old, calendar: paris)
+    #expect(a.responses == 35)
+    #expect(a.stage == .two)
+}
