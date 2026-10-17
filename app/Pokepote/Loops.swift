@@ -223,9 +223,13 @@ final class Loops {
     // MARK: Called by the gestures
 
     func click() {
-        if let link = appearance?.link {
+        switch ClickRule.action(link: appearance?.link, claudeIsFrontmost: ConversationOpener.claudeIsFrontmost) {
+        case .openConversation(let link):
             ConversationOpener.open(link)
-        } else {
+        case .hopAndShowClaude:
+            play(.hop, times: 1)
+            ConversationOpener.showClaude()
+        case .hop:
             play(.hop, times: 1)
         }
     }
