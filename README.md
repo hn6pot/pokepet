@@ -50,7 +50,7 @@ Removes the app, the automatic start, the mod and `~/.pokepet/`.
 
 ## Use
 
-- **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app); otherwise it hops.
+- **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app); otherwise it hops and brings the Claude app to the front.
 - **Drag**: move it (the position is remembered). **Scroll**: resize it, from 30 to 300 %.
 - **Right-click**: its name, stage, today's answers, "Un autre Pokémon" (another Pokémon for the day), "Taille normale" (normal size), "Quitter Poképote" (quit).
 

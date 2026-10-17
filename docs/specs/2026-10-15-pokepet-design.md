@@ -142,7 +142,7 @@ Il ne tremble jamais : quel que soit l'état, il est calme sur place (`Idle`), e
 Au lancement, le compagnon apparaît directement au bon stade, sans flash.
 
 **Gestes** : glisser = déplacer (position retenue) ; molette = taille de 30 à 300 % (100 % = pixels ×3, sans lissage) ;
-clic = ouvre la conversation qui attend si elle a un lien, sinon saute ; clic droit = menu (nom, « Stade 2/3 », « Réponses aujourd'hui : 12 », « Un autre Pokémon », « Taille normale », « Quitter Poképote ») ;
+clic = ouvre la conversation qui attend si elle a un lien ; sinon il saute et met l'app Claude au premier plan (en la lançant si elle est fermée), ou saute seulement si Claude est déjà devant ; clic droit = menu (nom, « Stade 2/3 », « Réponses aujourd'hui : 12 », « Un autre Pokémon », « Taille normale », « Quitter Poképote ») ;
 toute la silhouette est cliquable (le rectangle des pixels visibles de l'image en cours, plus 2 pixels de marge), la bulle aussi ; les clics passent à travers le vide plus loin autour. Si la position retenue est hors de tout écran, il revient en bas à droite de l'écran principal.
 
 **Les lignées** (dix depuis le 17/10, choisies par Bérenger ; au départ deux) : Salamèche → Reptincel → Dracaufeu ; Pichu → Pikachu → Raichu ;
