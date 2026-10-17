@@ -1,32 +1,36 @@
 # pokepet
 
-> A Pokémon desk pet for macOS that shows what Claude Code is doing. Fan project, non-commercial. Docs in French.
+<p align="center"><img src="docs/images/pokepote.png" alt="Charizard and Pikachu, in pixel art" width="336"></p>
 
-**Poképote** est un compagnon Pokémon qui flotte au-dessus des fenêtres du Mac et montre ce que fait Claude Code :
-il agit tranquillement quand Claude travaille, saute avec une bulle « ! » quand une conversation t'attend (un clic l'ouvre),
-fait une pirouette quand c'est fini, s'endort quand plus rien ne se passe.
+**English** · [Français](README.fr.md)
 
-Chaque matin à 4 h, un nouveau bébé est tiré parmi dix lignées (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
-Kaiminus, Minidraco, Fantominus, Embrylex, Draby). Il évolue à 30 puis 80 réponses de Claude dans la journée.
+**Poképote** is a Pokémon desk pet that floats above your Mac's windows and shows what Claude Code is doing:
+it goes quietly about its business while Claude works, hops with a "!" bubble when a conversation is waiting for you
+(one click opens it), spins when the work is done, and falls asleep when nothing happens.
 
-## Comment ça marche
+Every morning at 4 a.m., a new baby is drawn from ten lineages (Charmander, Pichu, Bulbasaur, Squirtle, Cyndaquil,
+Totodile, Dratini, Gastly, Larvitar, Bagon). It evolves after 30, then 80 Claude answers in the day.
 
-Deux pièces, qui ne se parlent que par des fichiers dans `~/.pokepet/` :
+The app's menus and the Pokémon names are in French.
 
-- un **mod Claude Code** (`mod/`, TypeScript) écrit l'état de chaque conversation (travaille, attend, fini, échec) et le compteur du jour ;
-- l'**app macOS** (`app/`, Swift/AppKit) les relit chaque seconde et dessine le compagnon.
+## How it works
 
-Seules les conversations avec une interface (app Desktop, terminal) comptent ; les `claude -p` sont ignorés.
-Conception détaillée : [`docs/specs/2026-10-15-pokepet-design.md`](docs/specs/2026-10-15-pokepet-design.md).
+Two pieces, which only talk through files in `~/.pokepet/`:
 
-## Prérequis
+- a **Claude Code mod** (`mod/`, TypeScript) writes the state of each conversation (working, waiting, done, failed) and the day's answer count;
+- the **macOS app** (`app/`, Swift/AppKit) reads them every second and draws the pet.
 
-- macOS 14 ou plus récent ;
-- les Command Line Tools d'Apple (`xcode-select --install`), Xcode n'est pas nécessaire ;
-- [Claude Code](https://claude.com/claude-code) (terminal ou app Desktop) ;
-- Python 3 (fourni avec les Command Line Tools) et une connexion internet pour la première installation.
+Only conversations with an interface (desktop app, terminal) count; `claude -p` runs are ignored.
+Detailed design (in French): [`docs/specs/2026-10-15-pokepet-design.md`](docs/specs/2026-10-15-pokepet-design.md).
 
-## Installer
+## Requirements
+
+- macOS 14 or later;
+- Apple's Command Line Tools (`xcode-select --install`); Xcode is not needed;
+- [Claude Code](https://claude.com/claude-code) (terminal or desktop app);
+- Python 3 (shipped with the Command Line Tools) and an internet connection for the first install.
+
+## Install
 
 ```bash
 git clone https://github.com/hn6pot/pokepet.git
@@ -34,37 +38,38 @@ cd pokepet
 make install
 ```
 
-`make install` télécharge les sprites (voir plus bas), lance les tests, construit `~/Applications/Poképote.app`,
-l'inscrit au démarrage de session (relancé s'il plante) et installe le mod pour toutes les conversations Claude Code.
-Le mod est installé depuis ce dossier : gardez le clone à sa place.
+`make install` downloads the sprites (see below), runs the tests, builds `~/Applications/Poképote.app`,
+registers it to start with your session (restarted if it crashes) and installs the mod for every Claude Code conversation.
+The mod is installed from this folder: keep the clone where it is.
 
 ```bash
 make uninstall
 ```
 
-Enlève l'app, le démarrage automatique, le mod et `~/.pokepet/`.
+Removes the app, the automatic start, the mod and `~/.pokepet/`.
 
-## Utiliser
+## Use
 
-- **Clic** sur le Pokémon ou sa bulle : ouvre la conversation qui attend (app Desktop), sinon il saute.
-- **Glisser** : le déplacer (la position est retenue). **Molette** : la taille, de 30 à 300 %.
-- **Clic droit** : son nom, son stade, les réponses du jour, « Un autre Pokémon », « Taille normale », « Quitter Poképote ».
+- **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app); otherwise it hops.
+- **Drag**: move it (the position is remembered). **Scroll**: resize it, from 30 to 300 %.
+- **Right-click**: its name, stage, today's answers, "Un autre Pokémon" (another Pokémon for the day), "Taille normale" (normal size), "Quitter Poképote" (quit).
 
-## Développer
+## Develop
 
-- `make test` : les tests de la logique (Swift Testing) et du mod (`claude plugin test`).
-- `make run` : lance l'app depuis le dépôt, sans l'installer.
+- `make test`: the logic tests (Swift Testing) and the mod tests (`claude plugin test`).
+- `make run`: runs the app from the repository, without installing it.
 
-## Projet de fan et sprites
+## Fan project and sprites
 
-Pokémon et les noms des Pokémon sont des marques et créations de Nintendo, Creatures et Game Freak. Ce projet n'est ni
-affilié ni approuvé par eux ; il est gratuit et non commercial.
+Pokémon and Pokémon character names are trademarks and creations of Nintendo, Creatures and Game Freak. This project is
+not affiliated with or endorsed by them; it is free and non-commercial.
 
-**Les sprites ne sont pas dans ce dépôt.** `scripts/fetch_sprites.py` les télécharge depuis
-[PMD SpriteCollab](https://github.com/PMDCollab/SpriteCollab), à un commit figé, la première fois qu'ils sont nécessaires.
-Ils restent soumis aux conditions de SpriteCollab : bases issues de *Pokémon Mystery Dungeon* (Chunsoft), ajouts de la
-communauté sous licence [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Crédits : [`CREDITS.md`](CREDITS.md).
+**The sprites are not in this repository**, apart from this README's illustration (`docs/images/pokepote.png`, made from
+the Charizard and Pikachu sprites). `scripts/fetch_sprites.py` downloads them from
+[PMD SpriteCollab](https://github.com/PMDCollab/SpriteCollab), at a pinned commit, the first time they are needed.
+They remain under SpriteCollab's terms: base sprites from *Pokémon Mystery Dungeon* (Chunsoft), community additions under
+[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). Credits: [`CREDITS.md`](CREDITS.md).
 
-## Licence
+## License
 
-Le code est sous licence [MIT](LICENSE). Elle ne couvre pas les sprites ni les personnages Pokémon.
+The code is under the [MIT](LICENSE) license. It does not cover the sprites or the Pokémon characters.
