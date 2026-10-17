@@ -50,7 +50,7 @@ Enlève l'app, le démarrage automatique, le mod et `~/.pokepet/`.
 
 - **Clic** sur le Pokémon ou sa bulle : ouvre la conversation qui attend (app Desktop) ; sinon il saute et met l'app Claude au premier plan.
 - **Glisser** : le déplacer (la position est retenue). **Molette** : la taille, de 30 à 300 %.
-- **Clic droit** : son nom, son stade, les réponses du jour, « Un autre Pokémon », « Taille normale », « Quitter Poképote ».
+- **Clic droit** : son nom, son stade, les réponses du jour, « Un autre Pokémon » (repart bébé, compteur à zéro), « Position par défaut » (retour en bas à droite), « Taille normale », « Quitter Poképote ».
 
 ## Développer
 

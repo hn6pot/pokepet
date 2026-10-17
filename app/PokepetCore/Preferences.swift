@@ -31,11 +31,12 @@ public final class Preferences {
             guard let day = defaults.string(forKey: "choix.journee"),
                   let lineage = defaults.string(forKey: "choix.lignee").flatMap(Lineage.init(rawValue:))
             else { return nil }
-            return DailyChoice(day: day, lineage: lineage)
+            return DailyChoice(day: day, lineage: lineage, startResponses: defaults.integer(forKey: "choix.depart"))
         }
         set {
             defaults.set(newValue?.day, forKey: "choix.journee")
             defaults.set(newValue?.lineage.rawValue, forKey: "choix.lignee")
+            defaults.set(newValue?.startResponses, forKey: "choix.depart")
         }
     }
 

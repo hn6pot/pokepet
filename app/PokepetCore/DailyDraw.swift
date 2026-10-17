@@ -32,12 +32,16 @@ public enum DailyDraw {
 }
 
 /// The lineage picked with « Un autre Pokémon » for a day; it only holds for that day.
+/// The new Pokémon starts from zero: it evolves on the answers counted since the choice.
 public struct DailyChoice: Equatable, Sendable {
     public let day: String
     public let lineage: Lineage
+    /// The day's answer count when the choice was made.
+    public let startResponses: Int
 
-    public init(day: String, lineage: Lineage) {
+    public init(day: String, lineage: Lineage, startResponses: Int = 0) {
         self.day = day
         self.lineage = lineage
+        self.startResponses = startResponses
     }
 }
