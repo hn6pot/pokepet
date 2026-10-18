@@ -30,6 +30,12 @@ final class Loops {
     private var step: Step?
     private var stepStart = Date()
     private var startX: CGFloat = 0
+    /// The middle of the window at its place (where it was put, or the default): every stroll comes back here.
+    /// The middle, because a resize keeps it in place.
+    private var homeMidX: CGFloat?
+    /// An animation asked for during a walk (a state change, a click): played once the step is over,
+    /// so a stroll is never cut short and always gets back to its place.
+    private var pendingPlay: (movement: Movement, times: Int)?
     private var generator = SystemRandomNumberGenerator()
     /// The day's answer count, as last read: where « Un autre Pokémon » starts counting from.
     private var dayResponses = 0
@@ -80,7 +86,6 @@ final class Loops {
         }
         if next.flash { flashStart = now }
         if let interlude = next.interlude { play(interlude.movement, times: interlude.times) }
-        if next.asleep { step = nil }
         if rhythmChanged { schedule(now) }
     }
 
@@ -116,7 +121,7 @@ final class Loops {
             }
         }
         if dragging {
-            step = nil
+            stopStep()
         } else if !interludePlaying {
             if step != nil {
                 advanceStep(now)
@@ -178,7 +183,10 @@ final class Loops {
 
     /// Plays a movement `times` times, then goes back to the base animation.
     private func play(_ movement: Movement, times: Int) {
-        step = nil
+        if step != nil {
+            pendingPlay = (movement, times)
+            return
+        }
         play(movement, direction: .front, looping: false)
         interludePlaying = true
         interludeRemaining = times
@@ -187,8 +195,9 @@ final class Loops {
     private func startStep(_ now: Date) {
         guard let screen = window.screen ?? NSScreen.main else { return }
         startX = window.frame.minX
+        let home = homeMidX.map { $0 - window.frame.width / 2 } ?? startX
         step = Stroll.nextStep(
-            x: startX, minimum: screen.visibleFrame.minX, maximum: screen.visibleFrame.maxX - window.frame.width,
+            x: startX, home: home, minimum: screen.visibleFrame.minX, maximum: screen.visibleFrame.maxX - window.frame.width,
             using: &generator)
         stepStart = now
     }
@@ -197,7 +206,16 @@ final class Loops {
         guard let step else { return }
         let progress = step.duration > 0 ? min(now.timeIntervalSince(stepStart) / step.duration, 1) : 1
         window.setFrameOrigin(CGPoint(x: startX + step.offset * progress, y: window.frame.minY))
-        if progress >= 1 { self.step = nil }
+        if progress >= 1 { stopStep() }
+    }
+
+    /// Ends the current step, then plays what was waiting for it.
+    private func stopStep() {
+        step = nil
+        if let pending = pendingPlay {
+            pendingPlay = nil
+            play(pending.movement, times: pending.times)
+        }
     }
 
     // MARK: Size and position
@@ -218,6 +236,7 @@ final class Loops {
     private func placeWindow() {
         if let position = preferences.position, NSScreen.screens.contains(where: { $0.visibleFrame.contains(position) }) {
             window.setFrameOrigin(position)
+            homeMidX = window.frame.midX
         } else {
             placeAtDefault()
         }
@@ -231,9 +250,11 @@ final class Loops {
               let sprite = view.silhouette(of: image)
         else {
             window.setFrameOrigin(CGPoint(x: screen.visibleFrame.maxX - window.frame.width, y: screen.visibleFrame.minY))
+            homeMidX = window.frame.midX
             return
         }
         window.setFrameOrigin(DefaultPlacement.origin(usableArea: screen.visibleFrame, spriteInWindow: sprite))
+        homeMidX = window.frame.midX
     }
 
     // MARK: Called by the gestures
@@ -251,8 +272,9 @@ final class Loops {
     }
 
     func positionChosen() {
-        step = nil
+        stopStep()
         preferences.position = window.frame.origin
+        homeMidX = window.frame.midX
     }
 
     func changeSize(factor: Double) {
@@ -272,7 +294,7 @@ final class Loops {
 
     /// Forgets the remembered position and goes back to the bottom-right corner.
     func defaultPosition() {
-        step = nil
+        stopStep()
         preferences.position = nil
         placeAtDefault()
     }
