@@ -130,7 +130,7 @@ Il ne tremble jamais : quel que soit l'état, il est calme sur place (`Idle`), e
 | Situation | Animation PMD | Comportement |
 |---|---|---|
 | travaille | `Idle` | une action toutes les 15 à 30 s : quelques pas `Walk` (un tiers) ou un geste (`Nod`, `Pose`, `LookUp`, `DeepBreath`, `Sit`, `Swing` ; Dracaufeu n'a que `Swing`) |
-| repos, fini, échec | `Idle` | une petite promenade toutes les 45 à 90 s, la fenêtre glisse sans sortir de l'écran |
+| repos, fini, échec | `Idle` | une petite promenade toutes les 45 à 90 s ; chaque promenade est un aller-retour : un pas qui l'éloigne de sa place (20 à 80 points), puis un pas qui l'y ramène exactement |
 | repos, fini ou échec, et aucun `majLe` plus récent que 15 min | `Sleep` | immobile, plus aucune action |
 | attend | `Hop` ×3 puis `Idle` + bulle « ! » | trois sauts quand l'attente commence, puis un saut de rappel toutes les 20 s |
 | fini | `Rotate` une fois | puis comme au repos |
@@ -172,7 +172,7 @@ Même date, même bébé, même après un redémarrage, sans rien stocker. « Un
 | `Lecteur.swift` | Le minutage : quelle image afficher après tant de temps, en boucle ou une seule fois, et « l'animation est-elle finie ? ». |
 | `SourceSprites.swift` | Le contrat d'une source de sprites : « donne-moi les images et durées de l'animation X du Pokémon Y, direction Z ». C'est ce qui rend la source interchangeable. |
 | `SpritesPMD.swift` | La source PMD : lit `AnimData.xml` et découpe les planches PNG en images (CoreGraphics, sans fenêtre). |
-| `Balade.swift` | Décide un pas de promenade (direction, distance, durée), sans sortir des bornes ; le hasard est injecté pour les tests. |
+| `Stroll.swift` | Décide un pas de promenade : un aller (20 à 80 points, sans sortir des bornes) puis un retour exact à sa place ; le hasard est injecté pour les tests. |
 | `Rythme.swift` | Quand faire la prochaine action et laquelle (quelques pas, un geste, un saut de rappel), selon l'état ; rien quand il dort. |
 | `ZoneCliquable.swift` | Le rectangle des pixels visibles d'une image (la silhouette cliquable) et « ce point est-il dans la bulle ? ». |
 | `Reglages.swift` | Position, taille et lignée choisie du jour retenues ; borne la taille entre 30 et 300 %. |
