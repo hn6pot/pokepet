@@ -14,7 +14,7 @@ sprites/pmd/0004/AnimData.xml:
 	python3 -I scripts/fetch_sprites.py
 
 test-app: sprites/pmd/0004/AnimData.xml
-	swift test $(TEST_FLAGS)
+	swift test $(TEST_FLAGS) $(if $(FILTER),--filter $(FILTER))
 
 # `claude plugin test` only looks for tests inside the mod's directory, and rejects imports
 # that leave it: we assemble a copy of the mod with tests/mod/ inside, in a temporary directory.
