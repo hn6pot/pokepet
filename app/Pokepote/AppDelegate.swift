@@ -27,6 +27,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menuBarIcon = MenuBarIcon(sprites: sprites, loops: loops, popover: popover)
     }
 
+    /// Opening Poképote again (Finder, `open -a Poképote`) brings a hidden companion back:
+    /// the way out if its menu bar icon is hidden behind the notch.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        loops?.companionVisible = true
+        return false
+    }
+
     /// In the installed app: `Poképote.app/Contents/Resources/sprites/pmd`.
     /// With `make run`: the POKEPET_SPRITES variable points to the repository's `sprites/pmd`.
     private static func spritesDirectory() -> URL {

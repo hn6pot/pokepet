@@ -58,6 +58,7 @@ Removes the app, the automatic start, the mod and `~/.pokepet/`.
   and "Réglages" (show or hide the pet, its size, the right-click actions).
   The figures are read locally from Claude Code's transcripts (`~/.claude/projects`) and kept in `~/.pokepet/usage.json`; nothing leaves your Mac.
   On a Mac with a notch and a full menu bar, the icon can end up hidden behind the notch: ⌘-drag it to the right, or hide other items in System Settings › Menu Bar.
+  If the pet is hidden and the icon cannot be reached, open Poképote again (`open -a Poképote`): the pet comes back.
 
 ## Develop
 

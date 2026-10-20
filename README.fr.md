@@ -56,6 +56,7 @@ Enlève l'app, le démarrage automatique, le mod et `~/.pokepet/`.
   et « Réglages » (afficher ou cacher le compagnon, sa taille, les actions du clic droit).
   Les chiffres sont lus sur le Mac, dans les journaux de Claude Code (`~/.claude/projects`), et gardés dans `~/.pokepet/usage.json` ; rien ne sort du Mac.
   Sur un Mac à encoche dont la barre des menus est pleine, l'icône peut se cacher derrière l'encoche : la glisser vers la droite avec ⌘, ou masquer d'autres icônes dans Réglages Système › Barre des menus.
+  Si le compagnon est caché et l'icône introuvable, rouvrir Poképote (`open -a Poképote`) le fait revenir.
 
 ## Développer
 
