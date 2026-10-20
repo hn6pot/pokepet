@@ -26,7 +26,7 @@ Critères de réussite :
 1. Dans une conversation Desktop ou terminal, le compagnon passe à « travaille » au début d'un tour, « attend » sur une question, un plan ou une permission, « fini » ou « échec » à la fin.
 2. Un `claude -p` (Hermès) ne change rien, ni l'état ni le compteur.
 3. Un clic quand une conversation Desktop attend ouvre cette conversation dans l'app Claude.
-4. Chaque matin (bascule à 4 h) un bébé de l'une des dix lignées ; stade 2 à 30 réponses, stade 3 à 80 (8 et 20 au départ, relevés le 17/10 : ça allait trop vite).
+4. Chaque matin (bascule à 4 h) un bébé de l'une des onze lignées ; stade 2 à 30 réponses, stade 3 à 80 (8 et 20 au départ, relevés le 17/10 : ça allait trop vite).
 5. `make install` le lance au démarrage de session et le relance s'il plante ; `make uninstall` enlève tout.
 6. `make test` passe : logique de l'app testée sans fenêtre, mod testé avec `claude plugin test`.
 
@@ -146,11 +146,12 @@ Au lancement, le compagnon apparaît directement au bon stade, sans flash.
 clic = ouvre la conversation qui attend si elle a un lien ; sinon il saute et met l'app Claude au premier plan (en la lançant si elle est fermée), ou saute seulement si Claude est déjà devant ; clic droit = menu (nom, « Stade 2/3 », « Réponses aujourd'hui : 12 », « Un autre Pokémon », « Position par défaut », « Taille normale », « Quitter Poképote ») ;
 toute la silhouette est cliquable (le rectangle des pixels visibles de l'image en cours, plus 2 pixels de marge), la bulle aussi ; les clics passent à travers le vide plus loin autour. Sans position retenue (ou si elle est hors de tout écran, ou via « Position par défaut »), le Pokémon lui-même — pas sa fenêtre — se pose à 40 points de la droite et 47 points du bas de la zone utile de l'écran principal (au-dessus du Dock), la place choisie à la main par Bérenger, mesurée sur la fenêtre réelle le 18/10.
 
-**Les lignées** (dix depuis le 17/10, choisies par Bérenger ; au départ deux) : Salamèche → Reptincel → Dracaufeu ; Pichu → Pikachu → Raichu ;
+**Les lignées** (onze depuis le 20/10, choisies par Bérenger ; au départ deux) : Salamèche → Reptincel → Dracaufeu ; Pichu → Pikachu → Raichu ;
 Bulbizarre → Herbizarre → Florizarre ; Carapuce → Carabaffe → Tortank ; Héricendre → Feurisson → Typhlosion ; Kaiminus → Crocrodil → Aligatueur ;
-Minidraco → Draco → Dracolosse ; Fantominus → Spectrum → Ectoplasma ; Embrylex → Ymphect → Tyranocif ; Draby → Drackhaus → Drattak.
+Minidraco → Draco → Dracolosse ; Fantominus → Spectrum → Ectoplasma ; Embrylex → Ymphect → Tyranocif ; Draby → Drackhaus → Drattak ;
+Magicarpe → Léviator → Léviator rouge (Léviator n'a pas de 3e stade : c'est sa forme chromatique de SpriteCollab, `0130/0000/0001` ; Méga-Léviator n'y a pas de sprites).
 
-**Tirage du jour** : la lignée est tirée de la date de la journée par une fonction de hachage stable (FNV-1a mélangée, modulo dix).
+**Tirage du jour** : la lignée est tirée de la date de la journée par une fonction de hachage stable (FNV-1a mélangée, modulo le nombre de lignées ; en ajouter une change les bébés des jours à venir).
 Même date, même bébé, même après un redémarrage, sans rien stocker. « Un autre Pokémon » (menu du clic droit) tire au hasard une des neuf autres lignées ; ce choix est retenu dans les réglages pour la journée seulement (jusqu'à 4 h), avec un flash au changement. Le nouveau Pokémon repart de zéro : il évolue sur les réponses comptées depuis le changement, et le menu affiche ce compteur-là. (Le `hashValue` de Swift change à chaque lancement : on ne l'utilise pas.)
 
 **Stade** : 0–29 réponses → bébé, 30–79 → stade 2, 80 et plus → stade 3.
@@ -159,7 +160,7 @@ Même date, même bébé, même après un redémarrage, sans rien stocker. « Un
 
 | Fichier | Responsabilité |
 |---|---|
-| `Lignee.swift` | Les dix lignées : noms français, numéros SpriteCollab. |
+| `Lignee.swift` | Les onze lignées : noms français, numéros SpriteCollab. |
 | `Journee.swift` | La date de la journée à partir de l'heure (bascule à 4 h). |
 | `TirageDuJour.swift` | Quelle lignée pour une journée donnée (hachage stable de la date), une autre au hasard, et le choix du jour (`ChoixDuJour`). |
 | `Stade.swift` | Quel stade pour un nombre de réponses (seuils 30 et 80). |

@@ -1,4 +1,4 @@
-/// Draws the lineage of the day among the ten, from the date: same date, same baby, nothing stored.
+/// Draws the lineage of the day among all of them, from the date: same date, same baby, nothing stored.
 /// Swift's `hashValue` changes at every launch: we compute our own hash (FNV-1a),
 /// then mix it (MurmurHash3's fmix32), otherwise the days would alternate fire, electric, fire…
 public enum DailyDraw {

@@ -22,7 +22,7 @@ func hashIsStable() {
 
 @Test("sur une année, chaque lignée sort assez souvent")
 func overAYearEveryLineageComesOutOftenEnough() {
-    // Ten lineages: 36.5 days each on average over 2026.
+    // Eleven lineages: about 33 days each on average over 2026.
     let draws = daysOf2026().map { DailyDraw.lineage(for: $0) }
     for lineage in Lineage.allCases {
         #expect((15...65).contains(draws.filter { $0 == lineage }.count), "\(lineage)")

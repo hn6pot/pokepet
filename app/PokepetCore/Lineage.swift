@@ -1,4 +1,4 @@
-/// A Pokémon: its displayed name and its SpriteCollab directory.
+/// A Pokémon: its displayed name and its SpriteCollab directory (a form or a shiny is a subdirectory).
 public struct Species: Equatable, Sendable {
     public let name: String
     public let number: String
@@ -18,6 +18,7 @@ public enum Lineage: String, CaseIterable, Sendable {
     case ghost = "spectre"
     case rock = "roche"
     case bagon = "draby"
+    case magikarp = "magicarpe"
 
     /// The three species, in stage order, with their SpriteCollab directory.
     public var allSpecies: [Species] {
@@ -32,6 +33,8 @@ public enum Lineage: String, CaseIterable, Sendable {
         case .ghost: [("Fantominus", "0092"), ("Spectrum", "0093"), ("Ectoplasma", "0094")]
         case .rock: [("Embrylex", "0246"), ("Ymphect", "0247"), ("Tyranocif", "0248")]
         case .bagon: [("Draby", "0371"), ("Drackhaus", "0372"), ("Drattak", "0373")]
+        // Gyarados has no third stage: the last one is its shiny form, the red Gyarados.
+        case .magikarp: [("Magicarpe", "0129"), ("Léviator", "0130"), ("Léviator rouge", "0130/0000/0001")]
         }
         return trio.map { Species(name: $0.0, number: $0.1) }
     }
