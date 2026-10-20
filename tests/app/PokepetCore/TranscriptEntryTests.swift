@@ -33,6 +33,8 @@ func automaticOrigin(entrypointField: String) {
     #"{"type":"user","uuid":"c","timestamp":"2026-10-20T13:42:00.123Z","entrypoint":"cli","isSidechain":true,"message":{"content":"Explore le dépôt"}}"#,
     #"{"type":"user","uuid":"d","timestamp":"2026-10-20T13:42:00.123Z","entrypoint":"cli","message":{"content":"<command-name>/clear</command-name>"}}"#,
     #"{"type":"user","uuid":"e","timestamp":"2026-10-20T13:42:00.123Z","entrypoint":"cli","message":{"content":[{"type":"text","text":"<system-reminder>x</system-reminder>"}]}}"#,
+    #"{"type":"user","uuid":"g","timestamp":"2026-10-20T13:42:00.123Z","entrypoint":"cli","message":{"content":[{"type":"text","text":"[Request interrupted by user]"}]}}"#,
+    #"{"type":"user","uuid":"h","timestamp":"2026-10-20T13:42:00.123Z","entrypoint":"cli","isCompactSummary":true,"message":{"content":"This session is being continued from a previous conversation."}}"#,
 ])
 func notTypedMessages(line: String) {
     #expect(entry(line) == nil)

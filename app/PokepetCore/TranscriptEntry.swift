@@ -22,7 +22,8 @@ public enum TranscriptEntry: Equatable, Sendable {
         let message = json["message"] as? [String: Any]
         switch json["type"] as? String {
         case "user":
-            guard json["isMeta"] as? Bool != true, json["isSidechain"] as? Bool != true,
+            // isCompactSummary: the summary Claude Code writes after a /compact.
+            guard json["isMeta"] as? Bool != true, json["isSidechain"] as? Bool != true, json["isCompactSummary"] as? Bool != true,
                   let uuid = json["uuid"] as? String, isTyped(message?["content"])
             else { return nil }
             return .typedMessage(uuid: uuid, date: date, origin: origin)
@@ -36,12 +37,17 @@ public enum TranscriptEntry: Equatable, Sendable {
         }
     }
 
-    /// Typed text: not a tool result, and not a system wrapper (`<command-name>`, `<system-reminder>`…).
+    /// Typed text: not a tool result, not a system wrapper (`<command-name>`, `<system-reminder>`…),
+    /// and not the marker Claude Code writes when the user presses Esc.
     private static func isTyped(_ content: Any?) -> Bool {
-        if let text = content as? String { return !text.hasPrefix("<") }
+        if let text = content as? String { return isTypedText(text) }
         guard let blocks = content as? [[String: Any]] else { return false }
         if blocks.contains(where: { $0["type"] as? String == "tool_result" }) { return false }
-        return blocks.contains { $0["type"] as? String == "text" && !(($0["text"] as? String) ?? "<").hasPrefix("<") }
+        return blocks.contains { $0["type"] as? String == "text" && isTypedText(($0["text"] as? String) ?? "<") }
+    }
+
+    private static func isTypedText(_ text: String) -> Bool {
+        !text.hasPrefix("<") && !text.hasPrefix("[Request interrupted")
     }
 
     private static func parseDate(_ text: String) -> Date? {

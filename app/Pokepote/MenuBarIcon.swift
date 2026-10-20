@@ -43,7 +43,8 @@ final class MenuBarIcon: NSObject {
         let index = min(player.frame(after: Date().timeIntervalSince(start)), images.count - 1)
         if index != shown {
             shown = index
-            button.image = images[index]        }
+            button.image = images[index]
+        }
     }
 
     @objc private func clicked() {
