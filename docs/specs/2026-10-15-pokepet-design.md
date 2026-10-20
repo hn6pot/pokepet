@@ -5,6 +5,7 @@ Date : 15/10/2026 · Statut : approuvée, puis ajustée par la répétition à b
 ## 1. Ce qu'on construit
 
 Un compagnon Pokémon animé qui flotte au-dessus de toutes les fenêtres du Mac et reflète ce que fait Claude Code.
+Depuis le 20/10, il est aussi dans la barre des menus, avec un récap et des réglages : voir [`2026-10-20-menu-bar-design.md`](2026-10-20-menu-bar-design.md).
 Deux pièces qui ne se parlent que par des fichiers dans `~/.pokepet/` :
 
 ```

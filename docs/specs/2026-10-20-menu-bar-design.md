@@ -1,6 +1,6 @@
 # Poképote dans la barre des menus — spécification
 
-Date : 20/10/2026 · Statut : relue par un constructeur, en attente de validation · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md), qui reste valable.
+Date : 20/10/2026 · Statut : approuvée, construite · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md), qui reste valable.
 
 ## 1. Pourquoi
 

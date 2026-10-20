@@ -53,6 +53,11 @@ Removes the app, the automatic start, the mod and `~/.pokepet/`.
 - **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app); otherwise it hops and brings the Claude app to the front.
 - **Drag**: move it (the position is remembered). **Scroll**: resize it, from 30 to 300 %.
 - **Right-click**: its name, stage, today's answers, "Un autre Pokémon" (another Pokémon for the day, starting again as a baby), "Position par défaut" (back to the bottom-right corner), "Taille normale" (normal size), "Quitter Poképote" (quit).
+- **Menu bar**: the Pokémon of the day also sits in the menu bar. Click it for a small window with two tabs:
+  "Récap" (tokens Claude generated and read from cache today, today's answers, messages you sent this month, `claude -p` runs apart)
+  and "Réglages" (show or hide the pet, its size, the right-click actions).
+  The figures are read locally from Claude Code's transcripts (`~/.claude/projects`) and kept in `~/.pokepet/usage.json`; nothing leaves your Mac.
+  On a Mac with a notch and a full menu bar, the icon can end up hidden behind the notch: ⌘-drag it to the right, or hide other items in System Settings › Menu Bar.
 
 ## Develop
 

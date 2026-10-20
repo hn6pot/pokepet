@@ -51,6 +51,11 @@ Enlève l'app, le démarrage automatique, le mod et `~/.pokepet/`.
 - **Clic** sur le Pokémon ou sa bulle : ouvre la conversation qui attend (app Desktop) ; sinon il saute et met l'app Claude au premier plan.
 - **Glisser** : le déplacer (la position est retenue). **Molette** : la taille, de 30 à 300 %.
 - **Clic droit** : son nom, son stade, les réponses du jour, « Un autre Pokémon » (repart bébé, compteur à zéro), « Position par défaut » (retour en bas à droite), « Taille normale », « Quitter Poképote ».
+- **Barre des menus** : le Pokémon du jour s'y trouve aussi. Un clic ouvre une petite fenêtre à deux onglets :
+  « Récap » (tokens générés et relus du cache aujourd'hui, réponses du jour, messages envoyés ce mois-ci, lancements `claude -p` à part)
+  et « Réglages » (afficher ou cacher le compagnon, sa taille, les actions du clic droit).
+  Les chiffres sont lus sur le Mac, dans les journaux de Claude Code (`~/.claude/projects`), et gardés dans `~/.pokepet/usage.json` ; rien ne sort du Mac.
+  Sur un Mac à encoche dont la barre des menus est pleine, l'icône peut se cacher derrière l'encoche : la glisser vers la droite avec ⌘, ou masquer d'autres icônes dans Réglages Système › Barre des menus.
 
 ## Développer
 
