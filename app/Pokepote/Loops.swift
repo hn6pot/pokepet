@@ -38,7 +38,7 @@ final class Loops {
     private var pendingPlay: (movement: Movement, times: Int)?
     private var generator = SystemRandomNumberGenerator()
     /// The day's answer count, as last read: where « Un autre Pokémon » starts counting from.
-    private var dayResponses = 0
+    private(set) var dayResponses = 0
     var dragging = false
     private var lastHover: Hover?
 
@@ -302,5 +302,22 @@ final class Loops {
     func normalSize() {
         preferences.size = 1
         resize()
+    }
+
+    var size: Double { preferences.size }
+
+    /// From the menu bar window's slider (clamped by the preferences).
+    func setSize(_ size: Double) {
+        preferences.size = size
+        resize()
+    }
+
+    /// Hidden from the menu bar window: the companion leaves the screen, the icon stays. Remembered.
+    var companionVisible: Bool {
+        get { preferences.companionVisible }
+        set {
+            preferences.companionVisible = newValue
+            if newValue { window.orderFrontRegardless() } else { window.orderOut(nil) }
+        }
     }
 }

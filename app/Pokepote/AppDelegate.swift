@@ -1,10 +1,11 @@
 import AppKit
 import PokepetCore
 
-/// Assembles the pieces at startup: preferences, sprites, window, gestures, loops.
+/// Assembles the pieces at startup: preferences, sprites, window, gestures, loops, menu bar icon.
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var loops: Loops?
+    private var menuBarIcon: MenuBarIcon?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let directory = Self.spritesDirectory()
@@ -12,15 +13,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Self.log("sprites introuvables dans \(directory.path)")
             exit(1)
         }
+        let sprites = PMDSprites(directory: directory)
+        let preferences = Preferences(defaults: .standard)
         let view = SpriteView()
         let window = CompanionWindow(view: view)
         let loops = Loops(
-            window: window, view: view, sprites: PMDSprites(directory: directory),
-            preferences: Preferences(defaults: .standard), stateDirectory: .standard)
+            window: window, view: view, sprites: sprites, preferences: preferences, stateDirectory: .standard)
         view.gestures = MouseGestures(window: window, view: view, loops: loops)
         loops.start()
-        window.orderFrontRegardless()
+        if preferences.companionVisible { window.orderFrontRegardless() }
         self.loops = loops
+        let popover = RecapPopover(model: PopoverModel(loops: loops, sprites: sprites))
+        menuBarIcon = MenuBarIcon(sprites: sprites, loops: loops, popover: popover)
+    }
+
+    /// Opening Poképote again (Finder, `open -a Poképote`) brings a hidden companion back:
+    /// the way out if its menu bar icon is hidden behind the notch.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        loops?.companionVisible = true
+        return false
     }
 
     /// In the installed app: `Poképote.app/Contents/Resources/sprites/pmd`.
