@@ -16,6 +16,9 @@ struct PopoverView: View {
             }
             .pickerStyle(.segmented)
             .labelsHidden()
+            if model.tab == .recap {
+                RecapTab(recap: model.recap)
+            }
         }
         .padding(14)
         .frame(width: 300)

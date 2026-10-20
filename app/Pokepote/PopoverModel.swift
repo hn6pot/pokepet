@@ -12,6 +12,9 @@ final class PopoverModel {
 
     var tab: Tab = .recap
     private(set) var appearance: Appearance?
+    /// `nil` until the first reading of the transcripts is over.
+    private(set) var recap: Recap?
+    @ObservationIgnored private var scanning = false
     /// The large animated Pokémon of the header.
     private(set) var headerImages: [NSImage] = []
     private var headerPlayer = FramePlayer(durations: [1], looping: true)
@@ -33,6 +36,32 @@ final class PopoverModel {
             headerPlayer = FramePlayer(durations: frames.durations, looping: true)
         }
         appearance = next
+        refreshUsage()
+    }
+
+    /// Reads the new transcript lines away from the main thread (the first time, the whole month):
+    /// one reading at a time, the window shows « … » until it is over.
+    private func refreshUsage() {
+        guard !scanning else { return }
+        scanning = true
+        let responses = loops.dayResponses
+        Task {
+            let result = await Task.detached(priority: .utility) { Self.readUsage(responses: responses) }.value
+            recap = result.recap
+            scanning = false
+            if let error = result.error { AppDelegate.log("usage.json non enregistré : \(error)") }
+        }
+    }
+
+    private nonisolated static func readUsage(responses: Int) -> (recap: Recap, error: String?) {
+        let url = StateDirectory.standard.root.appending(path: "usage.json")
+        var ledger = UsageLedger.load(from: url)
+        let now = Date()
+        TranscriptScanner.standard.scan(into: &ledger, since: Recap.monthStart(now: now))
+        ledger.forgetIDs(before: PokepetDay.key(now.addingTimeInterval(-40 * 86_400)))
+        var failure: String?
+        do { try ledger.save(to: url) } catch { failure = "\(error)" }
+        return (Recap.make(ledger: ledger, responses: responses, now: now), failure)
     }
 
     func headerImage(at date: Date) -> NSImage? {
