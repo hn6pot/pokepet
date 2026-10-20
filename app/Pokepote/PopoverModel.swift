@@ -15,6 +15,13 @@ final class PopoverModel {
     /// `nil` until the first reading of the transcripts is over.
     private(set) var recap: Recap?
     @ObservationIgnored private var scanning = false
+    /// The « Réglages » tab's values, applied to the companion as soon as they change.
+    var companionVisible = true {
+        didSet { if companionVisible != loops.companionVisible { loops.companionVisible = companionVisible } }
+    }
+    var size = 1.0 {
+        didSet { if size != loops.size { loops.setSize(size) } }
+    }
     /// The large animated Pokémon of the header.
     private(set) var headerImages: [NSImage] = []
     private var headerPlayer = FramePlayer(durations: [1], looping: true)
@@ -36,6 +43,8 @@ final class PopoverModel {
             headerPlayer = FramePlayer(durations: frames.durations, looping: true)
         }
         appearance = next
+        companionVisible = loops.companionVisible
+        size = loops.size
         refreshUsage()
     }
 

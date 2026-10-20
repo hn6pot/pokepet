@@ -25,6 +25,12 @@ public final class Preferences {
         set { defaults.set(Self.clamp(newValue), forKey: "taille") }
     }
 
+    /// False once hidden from the menu bar window; shown at first launch.
+    public var companionVisible: Bool {
+        get { defaults.object(forKey: "compagnon.visible") == nil ? true : defaults.bool(forKey: "compagnon.visible") }
+        set { defaults.set(newValue, forKey: "compagnon.visible") }
+    }
+
     /// The lineage picked with « Un autre Pokémon », with its day; `nil` without a choice.
     public var dailyChoice: DailyChoice? {
         get {

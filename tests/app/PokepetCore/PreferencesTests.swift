@@ -55,3 +55,11 @@ func preferencesSavedByTheInstalledAppAreReadBack() {
     p.dailyChoice = DailyChoice(day: "2026-10-17", lineage: .dragon, startResponses: 23)
     #expect(p.dailyChoice?.startResponses == 23)
 }
+
+@Test("le compagnon est visible par défaut, et son masquage est retenu")
+func companionVisibilityIsRemembered() {
+    let (p, _) = blankPreferences()
+    #expect(p.companionVisible)
+    p.companionVisible = false
+    #expect(!p.companionVisible)
+}

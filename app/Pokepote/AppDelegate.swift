@@ -14,14 +14,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             exit(1)
         }
         let sprites = PMDSprites(directory: directory)
+        let preferences = Preferences(defaults: .standard)
         let view = SpriteView()
         let window = CompanionWindow(view: view)
         let loops = Loops(
-            window: window, view: view, sprites: sprites,
-            preferences: Preferences(defaults: .standard), stateDirectory: .standard)
+            window: window, view: view, sprites: sprites, preferences: preferences, stateDirectory: .standard)
         view.gestures = MouseGestures(window: window, view: view, loops: loops)
         loops.start()
-        window.orderFrontRegardless()
+        if preferences.companionVisible { window.orderFrontRegardless() }
         self.loops = loops
         let popover = RecapPopover(model: PopoverModel(loops: loops, sprites: sprites))
         menuBarIcon = MenuBarIcon(sprites: sprites, loops: loops, popover: popover)
