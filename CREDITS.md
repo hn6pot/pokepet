@@ -35,3 +35,6 @@ Ces sprites ne sont pas dans le dépôt : `scripts/fetch_sprites.py` les téléc
 - **Draby** (`0371`) : CHUNSOFT (Unspecified), JFain (CC_BY-NC_4)
 - **Drackhaus** (`0372`) : CHUNSOFT (Unspecified)
 - **Drattak** (`0373`) : CHUNSOFT (Unspecified), Emmuffin (PMDCollab_1)
+- **Magicarpe** (`0129`) : CHUNSOFT (Unspecified)
+- **Léviator** (`0130`) : CHUNSOFT (Unspecified)
+- **Léviator rouge** (`0130/0000/0001`) : Emmuffin (CC_BY-NC_4), Noo (CC_BY-NC_4)

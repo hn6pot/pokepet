@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fetches the sprites of pokepet's Pokémon from PMDCollab/SpriteCollab, at a pinned commit,
 into sprites/pmd/<number>/, and regenerates CREDITS.md. The Makefile runs it the first time the
-sprites are needed (make test, make run, make install): they are not in the repository, since
+sprites are needed (make test, make run, make install), and again whenever this list changes: they are not in the repository, since
 Pokémon art belongs to Nintendo / Chunsoft. Once installed, the app never downloads anything."""
 
 import pathlib
@@ -19,7 +19,8 @@ POKEMON = {"0004": "Salamèche", "0005": "Reptincel", "0006": "Dracaufeu",
            "0147": "Minidraco", "0148": "Draco", "0149": "Dracolosse",
            "0092": "Fantominus", "0093": "Spectrum", "0094": "Ectoplasma",
            "0246": "Embrylex", "0247": "Ymphect", "0248": "Tyranocif",
-           "0371": "Draby", "0372": "Drackhaus", "0373": "Drattak"}
+           "0371": "Draby", "0372": "Drackhaus", "0373": "Drattak",
+           "0129": "Magicarpe", "0130": "Léviator", "0130/0000/0001": "Léviator rouge"}
 # The animations every Pokémon must have, then the optional gestures (Dracaufeu has few).
 ANIMATIONS = ["Idle", "Walk", "Hop", "Rotate", "Hurt", "Sleep"]
 GESTURES = ["Nod", "Pose", "LookUp", "DeepBreath", "Sit", "Swing"]

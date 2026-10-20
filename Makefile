@@ -10,10 +10,13 @@ test: test-app test-mod
 
 # The sprites are not in the repository (Pokémon art belongs to Nintendo / Chunsoft): they are
 # downloaded from PMD SpriteCollab, at a pinned commit, the first time something needs them.
-sprites/pmd/0004/AnimData.xml:
+# The stamp is older than the script when a Pokémon was added: everything is downloaded again.
+SPRITES = sprites/pmd/.complete
+$(SPRITES): scripts/fetch_sprites.py
 	python3 -I scripts/fetch_sprites.py
+	touch $@
 
-test-app: sprites/pmd/0004/AnimData.xml
+test-app: $(SPRITES)
 	swift test $(TEST_FLAGS) $(if $(FILTER),--filter $(FILTER))
 
 # `claude plugin test` only looks for tests inside the mod's directory, and rejects imports
@@ -30,13 +33,13 @@ test-mod:
 	     else echo "(app Desktop absente : validation Desktop sautée)"; fi; S=$$?; rm -rf $$T; exit $$S
 
 # Runs the app from the repository, without installing it (Ctrl-C to stop).
-run: sprites/pmd/0004/AnimData.xml
+run: $(SPRITES)
 	swift build $(SWIFT_FLAGS)
 	POKEPET_SPRITES=$(CURDIR)/sprites/pmd .build/debug/Pokepote
 
 # Assembles .build/Poképote.app: the binary, its Info.plist, the sprites, a local signature.
 APP_BUILD = .build/Poképote.app
-app: sprites/pmd/0004/AnimData.xml
+app: $(SPRITES)
 	swift build $(SWIFT_FLAGS) -c release
 	rm -rf "$(APP_BUILD)" && mkdir -p "$(APP_BUILD)/Contents/MacOS" "$(APP_BUILD)/Contents/Resources"
 	cp .build/release/Pokepote "$(APP_BUILD)/Contents/MacOS/"

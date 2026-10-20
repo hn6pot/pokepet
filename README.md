@@ -8,8 +8,8 @@
 it goes quietly about its business while Claude works, hops with a "!" bubble when a conversation is waiting for you
 (one click opens it), spins when the work is done, and falls asleep when nothing happens.
 
-Every morning at 4 a.m., a new baby is drawn from ten lineages (Charmander, Pichu, Bulbasaur, Squirtle, Cyndaquil,
-Totodile, Dratini, Gastly, Larvitar, Bagon). It evolves after 30, then 80 Claude answers in the day.
+Every morning at 4 a.m., a new baby is drawn from eleven lineages (Charmander, Pichu, Bulbasaur, Squirtle, Cyndaquil,
+Totodile, Dratini, Gastly, Larvitar, Bagon, Magikarp, whose last stage is the red, shiny Gyarados). It evolves after 30, then 80 Claude answers in the day.
 
 The app's menus and the Pokémon names are in French.
 

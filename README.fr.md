@@ -8,8 +8,8 @@
 il agit tranquillement quand Claude travaille, saute avec une bulle « ! » quand une conversation t'attend (un clic l'ouvre),
 fait une pirouette quand c'est fini, s'endort quand plus rien ne se passe.
 
-Chaque matin à 4 h, un nouveau bébé est tiré parmi dix lignées (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
-Kaiminus, Minidraco, Fantominus, Embrylex, Draby). Il évolue à 30 puis 80 réponses de Claude dans la journée.
+Chaque matin à 4 h, un nouveau bébé est tiré parmi onze lignées (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
+Kaiminus, Minidraco, Fantominus, Embrylex, Draby, Magicarpe, qui finit en Léviator rouge, chromatique). Il évolue à 30 puis 80 réponses de Claude dans la journée.
 
 ## Comment ça marche
 

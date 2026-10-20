@@ -19,8 +19,8 @@ func eachStageGivesItsSpecies() {
     #expect(Lineage.electric.species(at: .three).name == "Raichu")
 }
 
-@Test("il y a dix lignées de trois Pokémon")
-func thereAreTenLineagesOfThreePokemon() {
+@Test("il y a onze lignées de trois Pokémon")
+func thereAreElevenLineagesOfThreePokemon() {
     let expected: [Lineage: [String]] = [
         .fire: ["Salamèche", "Reptincel", "Dracaufeu"],
         .electric: ["Pichu", "Pikachu", "Raichu"],
@@ -32,8 +32,9 @@ func thereAreTenLineagesOfThreePokemon() {
         .ghost: ["Fantominus", "Spectrum", "Ectoplasma"],
         .rock: ["Embrylex", "Ymphect", "Tyranocif"],
         .bagon: ["Draby", "Drackhaus", "Drattak"],
+        .magikarp: ["Magicarpe", "Léviator", "Léviator rouge"],
     ]
-    #expect(Lineage.allCases.count == 10)
+    #expect(Lineage.allCases.count == 11)
     for lineage in Lineage.allCases {
         #expect(lineage.allSpecies.map(\.name) == expected[lineage], "\(lineage)")
     }
@@ -43,13 +44,18 @@ func thereAreTenLineagesOfThreePokemon() {
 func numbersAreSpriteCollabs() {
     #expect(Lineage.dragon.allSpecies.map(\.number) == ["0147", "0148", "0149"])
     #expect(Lineage.rock.allSpecies.map(\.number) == ["0246", "0247", "0248"])
-    #expect(Set(Lineage.allCases.flatMap(\.allSpecies).map(\.number)).count == 30)
+    #expect(Set(Lineage.allCases.flatMap(\.allSpecies).map(\.number)).count == 33)
 }
 
 @Test("les valeurs enregistrées des lignées ne changent pas")
 func storedLineageValuesDoNotChange() {
     // Stored in the preferences (« Un autre Pokémon ») and ordered for the daily draw: both must stay put.
     #expect(Lineage.allCases.map(\.rawValue) == [
-        "feu", "electrik", "plante", "eau", "hericendre", "kaiminus", "dragon", "spectre", "roche", "draby",
+        "feu", "electrik", "plante", "eau", "hericendre", "kaiminus", "dragon", "spectre", "roche", "draby", "magicarpe",
     ])
+}
+
+@Test("la lignée Magicarpe finit en Léviator rouge, la forme chromatique de SpriteCollab")
+func magikarpLineageEndsWithRedGyarados() {
+    #expect(Lineage.magikarp.allSpecies.map(\.number) == ["0129", "0130", "0130/0000/0001"])
 }
