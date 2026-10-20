@@ -38,7 +38,7 @@ final class Loops {
     private var pendingPlay: (movement: Movement, times: Int)?
     private var generator = SystemRandomNumberGenerator()
     /// The day's answer count, as last read: where « Un autre Pokémon » starts counting from.
-    private var dayResponses = 0
+    private(set) var dayResponses = 0
     var dragging = false
     private var lastHover: Hover?
 
