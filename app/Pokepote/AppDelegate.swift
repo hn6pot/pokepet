@@ -13,6 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             Self.log("sprites introuvables dans \(directory.path)")
             exit(1)
         }
+        BackgroundCursor.allow()
         let sprites = PMDSprites(directory: directory)
         let preferences = Preferences(defaults: .standard)
         let view = SpriteView()
