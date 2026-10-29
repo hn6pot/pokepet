@@ -152,7 +152,13 @@ final class Loops {
             lastHover = state
             let mouse = view.convert(window.convertPoint(fromScreen: state.mouse), from: nil)
             let passThrough = !(dragging || view.hitsSprite(mouse))
-            if window.ignoresMouseEvents != passThrough { window.ignoresMouseEvents = passThrough }
+            if window.ignoresMouseEvents != passThrough {
+                window.ignoresMouseEvents = passThrough
+                if passThrough { NSCursor.arrow.set() }
+            }
+            // On the sprite, a pointing hand shows it can be clicked. Set again on every move:
+            // macOS puts the arrow back as soon as the mouse moves over the window.
+            if !passThrough { NSCursor.pointingHand.set() }
         }
     }
 
