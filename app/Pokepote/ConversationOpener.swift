@@ -19,7 +19,7 @@ enum ConversationOpener {
 
     /// The terminal picked when none is set: iTerm2 if it is installed, Terminal otherwise.
     static var defaultTerminal: TerminalApp {
-        NSWorkspace.shared.urlForApplication(withBundleIdentifier: TerminalApp.iterm.bundleID) == nil ? .terminal : .iterm
+        isInstalled(.iterm) ? .iterm : .terminal
     }
 
     /// The `claude` binary, where the installers put it; `nil` if none is there.
@@ -41,9 +41,22 @@ enum ConversationOpener {
         let script = NSAppleScript(source: app.attachScript(claudePath: claudePath, job: job))
         guard script?.executeAndReturnError(&error) != nil else {
             AppDelegate.log("attach \(job) dans \(app.displayName) : \(error ?? [:])")
+            // Permission refused once: every click would silently fall back to Claude. Show where to allow it again.
+            if error?[NSAppleScript.errorNumber] as? Int == permissionRefused, let pane = automationSettings {
+                NSWorkspace.shared.open(pane)
+            }
             return false
         }
         return true
+    }
+
+    /// AppleScript's « not authorized to send Apple events » (errAEEventNotPermitted).
+    private static let permissionRefused = -1743
+    private static let automationSettings = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Automation")
+
+    /// True if the terminal is installed (a chosen terminal can be uninstalled afterwards).
+    static func isInstalled(_ app: TerminalApp) -> Bool {
+        NSWorkspace.shared.urlForApplication(withBundleIdentifier: app.bundleID) != nil
     }
 
     /// Brings a terminal to the front; false if it is not running.

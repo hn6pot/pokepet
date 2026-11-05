@@ -347,9 +347,13 @@ final class Loops {
         }
     }
 
-    /// From the « Réglages » tab: the terminal that opens a waiting background job.
+    /// From the « Réglages » tab: the terminal that opens a waiting background job. A terminal chosen then
+    /// uninstalled falls back to the default.
     var terminalApp: TerminalApp {
-        get { preferences.terminalApp ?? ConversationOpener.defaultTerminal }
+        get {
+            guard let chosen = preferences.terminalApp, ConversationOpener.isInstalled(chosen) else { return ConversationOpener.defaultTerminal }
+            return chosen
+        }
         set { preferences.terminalApp = newValue }
     }
 }

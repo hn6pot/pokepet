@@ -60,7 +60,7 @@ final class SpriteView: NSView {
         // « ! » in red for a Desktop conversation; « >_ » in blue, monospaced, for a conversation in a terminal.
         let text = bubble == .terminal
             ? NSAttributedString(string: ">_", attributes: [
-                .font: NSFont.monospacedSystemFont(ofSize: radius * 1.0, weight: .bold), .foregroundColor: NSColor.systemBlue,
+                .font: NSFont.monospacedSystemFont(ofSize: radius * 1.25, weight: .bold), .foregroundColor: NSColor.systemBlue,
             ])
             : NSAttributedString(string: "!", attributes: [
                 .font: NSFont.boldSystemFont(ofSize: radius * 1.4), .foregroundColor: NSColor.systemRed,

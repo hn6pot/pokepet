@@ -45,27 +45,27 @@ Parmi les sessions `attend` gardées, l'app prend **la plus récente** (`majLe`)
 
 Aujourd'hui, `MostUrgentState` choisit le lien de la session `attend` la plus récente **qui a un lien**. Cette règle devient : la session `attend` la plus récente, point ; sa cible, quelle qu'elle soit. Une Desktop qui attend depuis 10 s passe donc avant un job qui attend depuis une heure, et inversement.
 
-**La bulle « >_ »** : même cercle blanc cerclé de noir, même taille, le texte `>_` en police à chasse fixe grasse, bleu système, à la place du « ! » rouge. Le saut triple à l'entrée en attente, le rythme (un saut toutes les 20 s) et la zone cliquable ne changent pas.
+**La bulle « >_ »** : même cercle blanc cerclé de noir, même taille, le texte `>_` en police à chasse fixe grasse (1,25 × le rayon), bleu système, à la place du « ! » rouge. Le saut triple à l'entrée en attente, le rythme (un saut toutes les 20 s) et la zone cliquable ne changent pas.
 
 **Lancer `claude attach`** : par AppleScript, le seul moyen qui marche pour iTerm (vérifié le 04/11 : iTerm n'exécute pas un fichier `.command` ouvert par `open -a iTerm`, Terminal si ; on prend le même mécanisme pour les deux).
 
 ```applescript
 -- iTerm2
 tell application "iTerm"
-  activate
   create window with default profile command "/bin/zsh -lc '/Users/…/.local/bin/claude attach c5adc286; exec /bin/zsh'"
+  activate
 end tell
 
 -- Terminal
 tell application "Terminal"
-  activate
   do script "/bin/zsh -lc '/Users/…/.local/bin/claude attach c5adc286; exec /bin/zsh'"
+  activate
 end tell
 ```
 
 La commande passe par un shell qui reste ouvert après `attach` (`exec /bin/zsh`), pour les deux terminaux : le profil iTerm par défaut ferme la fenêtre dès que la commande se termine, et un `attach` qui échoue (job archivé, démon arrêté) disparaîtrait sans laisser lire son erreur (relevé par le relecteur, 04/11 ; mon choix). Le chemin du shell est fixe (`/bin/zsh`), jamais `$SHELL` : rien d'extérieur n'entre dans le script en dehors du chemin de `claude` et de l'identifiant, tous deux de forme vérifiée.
 
-Le chemin de `claude` est cherché dans cet ordre : `~/.local/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`. Sans binaire trouvé, ou si le script AppleScript lui-même échoue, le clic retombe sur « saute et montre Claude » et l'app journalise l'erreur (`AppDelegate.log`). Un échec d'`attach` lui-même se lit dans la fenêtre du terminal, pas dans le journal : pour l'app, le script a réussi.
+Le chemin de `claude` est cherché dans cet ordre : `~/.local/bin/claude`, `/opt/homebrew/bin/claude`, `/usr/local/bin/claude`. Sans binaire trouvé, ou si le script AppleScript lui-même échoue, le clic retombe sur « saute et montre Claude » et l'app journalise l'erreur (`AppDelegate.log`). Si l'échec est un refus de permission (erreur AppleScript -1743), l'app ouvre en plus le volet Automatisation des Réglages Système, pour qu'on puisse la réautoriser. `activate` vient après l'ouverture de la fenêtre : un terminal qui ne tournait pas n'ouvre pas sa fenêtre par défaut en plus. Un échec d'`attach` lui-même se lit dans la fenêtre du terminal, pas dans le journal : pour l'app, le script a réussi.
 L'app déclare `NSAppleEventsUsageDescription` dans `packaging/Info.plist` ; macOS demande une fois « Poképote veut contrôler iTerm / Terminal » (et le redemandera après chaque `make install`, la signature ad hoc changeant à chaque build : limite acceptée).
 
 **Mettre un terminal au premier plan** : `NSRunningApplication` par identifiant de bundle, `com.googlecode.iterm2` ou `com.apple.Terminal`, puis `activate()`. Pas d'AppleScript ici, donc pas de permission.
@@ -85,7 +85,7 @@ Deux lignes de plus dans l'onglet Réglages, sous la taille :
 ```
 
 - **« Suivre les conversations terminal »**, actif par défaut. Désactivé : une session `attend` dont la cible est `job`, `terminal` ou rien n'est plus montrée comme une attente, elle compte comme `travaille` (mon choix : pas de bulle muette, et le Pokémon ne dort pas tant que la conversation vit). Les Desktop ne changent pas. Le sélecteur de terminal est grisé.
-- **« Terminal »** : iTerm2 ou Terminal. Par défaut iTerm2 s'il est installé (`NSWorkspace.urlForApplication(withBundleIdentifier:)`), sinon Terminal. Sert uniquement à `claude attach` : un `claude` à la main revient dans le terminal où il tourne, pas dans celui choisi.
+- **« Terminal »** : iTerm2 ou Terminal. Par défaut iTerm2 s'il est installé (`NSWorkspace.urlForApplication(withBundleIdentifier:)`), sinon Terminal ; un terminal choisi puis désinstallé retombe sur ce défaut. Sert uniquement à `claude attach` : un `claude` à la main revient dans le terminal où il tourne, pas dans celui choisi.
 
 Clés `UserDefaults` : `terminal.suivi` (Bool, absent = true) et `terminal.app` (`"iterm"` ou `"terminal"`, absent = le défaut ci-dessus).
 
@@ -112,7 +112,9 @@ Clés `UserDefaults` : `terminal.suivi` (Bool, absent = true) et `terminal.app` 
 | Identifiants de bundle : `com.googlecode.iterm2`, `com.apple.Terminal`. | `mdls` sur `/Applications/iTerm.app` |
 | Le lien Desktop prime déjà : une conversation Desktop a `CLAUDE_CODE_ENTRYPOINT=claude-desktop` et son `local_…` ; le mod n'y lit aucun `TERM_PROGRAM` utile. | `ps -E` sur cette session |
 
-Non vérifié, à essayer à la main dans le plan : ce que fait `claude attach` quand le job est déjà attaché dans un autre terminal (deuxième vue, refus, ou vol de la session).
+Joué le 05/11 (Bérenger, agent d'essai `6cee9594`) : un second clic sur « >_ » alors que le job est déjà attaché n'a rien cassé ni gêné (« fonctionne parfaitement ») ; le détail (deuxième vue ou reprise de la session) n'a pas été noté. Pas de détection ajoutée.
+
+Limite connue, relevée à la relecture : `NSAppleScript` tourne sur le fil principal ; pendant la demande de permission macOS ou le démarrage à froid d'iTerm, le Pokémon et la barre des menus restent figés quelques secondes. Accepté : pas de correctif simple et sûr (l'API n'est pas garantie hors du fil principal).
 
 ## 5. Non-buts et limites connues
 
@@ -121,7 +123,7 @@ Non vérifié, à essayer à la main dans le plan : ce que fait `claude attach` 
 - Pas d'infobulle, pas de nom du job dans la bulle.
 - Les agents de fond dont le processus est mort ne font pas de bulle (le triage supprime leur fichier) : inchangé.
 - Les archives (`claude agents` ne liste plus le job) ne sont pas consultées : si `attach` échoue dans le terminal, l'erreur s'affiche là, dans la fenêtre restée ouverte.
-- **Pas de détection « déjà attaché »** (mon choix, après la question du relecteur) : chaque clic sur « >_ » lance un nouvel `attach` dans une nouvelle fenêtre, même si un premier clic a déjà attaché le job ; le saut de rappel toutes les 20 s continue tant que la question n'a pas de réponse. Ce que fait alors `claude attach` (deuxième vue, refus, reprise de la session) se constate à la vérification manuelle et se note au § 4 ; on ne construit une détection (lire `claude agents --json` avant d'attacher, et passer le terminal devant si le job y est déjà) que si l'essai montre un vrai désagrément. Les premières versions restent simples.
+- **Pas de détection « déjà attaché »** (mon choix, après la question du relecteur) : chaque clic sur « >_ » lance un nouvel `attach` dans une nouvelle fenêtre, même si un premier clic a déjà attaché le job ; le saut de rappel toutes les 20 s continue tant que la question n'a pas de réponse. Ce que fait alors `claude attach` s'est constaté à la vérification manuelle (§ 4 : rien de gênant) ; on ne construit une détection (lire `claude agents --json` avant d'attacher, et passer le terminal devant si le job y est déjà) que si l'essai montre un vrai désagrément. Les premières versions restent simples.
 
 ## 6. Fichiers touchés
 
