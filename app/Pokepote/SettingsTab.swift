@@ -2,7 +2,7 @@ import AppKit
 import PokepetCore
 import SwiftUI
 
-/// The « Réglages » tab: show or hide the companion, its size, and the right-click actions.
+/// The « Réglages » tab: show or hide the companion, its size, the terminal conversations, and the right-click actions.
 struct SettingsTab: View {
     @Bindable var model: PopoverModel
 
@@ -13,6 +13,12 @@ struct SettingsTab: View {
                 Text("Taille")
                 Slider(value: $model.size, in: Preferences.minSize...Preferences.maxSize)
             }
+            Toggle("Suivre les conversations terminal", isOn: $model.terminalTracking).toggleStyle(.switch)
+            Picker("Terminal", selection: $model.terminalApp) {
+                ForEach(TerminalApp.allCases, id: \.self) { Text($0.displayName).tag($0) }
+            }
+            .pickerStyle(.menu)
+            .disabled(!model.terminalTracking)
             Button("Taille normale") {
                 model.loops.normalSize()
                 model.refresh()

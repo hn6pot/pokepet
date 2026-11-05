@@ -73,7 +73,7 @@ final class Loops {
         let responses = DailyCounter.total(stateDirectory.counters(day: PokepetDay.key(now)))
         dayResponses = responses
         let next = companion.update(
-            now: now, urgency: MostUrgentState.compute(sessions), responses: responses,
+            now: now, urgency: MostUrgentState.compute(sessions, terminalTracking: preferences.terminalTracking), responses: responses,
             lastActivity: sessions.map(\.updatedAt).max(), choice: preferences.dailyChoice)
         let speciesChanged = next.species != appearance?.species
         let rhythmChanged = next.display != appearance?.display || next.asleep != appearance?.asleep
@@ -267,7 +267,7 @@ final class Loops {
 
     func click() {
         let action = ClickRule.action(
-            target: appearance?.target, terminalApp: ConversationOpener.defaultTerminal,
+            target: appearance?.target, terminalApp: terminalApp,
             claudeIsFrontmost: ConversationOpener.claudeIsFrontmost)
         switch action {
         case .openConversation(let link):
@@ -336,5 +336,20 @@ final class Loops {
             preferences.companionVisible = newValue
             if newValue { window.orderFrontRegardless() } else { window.orderOut(nil) }
         }
+    }
+
+    /// From the « Réglages » tab: whether terminal conversations show the « >_ » bubble. Applied at once.
+    var terminalTracking: Bool {
+        get { preferences.terminalTracking }
+        set {
+            preferences.terminalTracking = newValue
+            reload()
+        }
+    }
+
+    /// From the « Réglages » tab: the terminal that opens a waiting background job.
+    var terminalApp: TerminalApp {
+        get { preferences.terminalApp ?? ConversationOpener.defaultTerminal }
+        set { preferences.terminalApp = newValue }
     }
 }

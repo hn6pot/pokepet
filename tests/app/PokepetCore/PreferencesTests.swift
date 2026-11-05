@@ -63,3 +63,21 @@ func companionVisibilityIsRemembered() {
     p.companionVisible = false
     #expect(!p.companionVisible)
 }
+
+@Test("le suivi des conversations terminal est actif par défaut, et son arrêt est retenu")
+func terminalTrackingIsOnByDefaultAndRemembered() {
+    let (p, _) = blankPreferences()
+    #expect(p.terminalTracking)
+    p.terminalTracking = false
+    #expect(!p.terminalTracking)
+}
+
+@Test("le terminal choisi est retenu ; absent ou inconnu, il n'y en a pas")
+func theChosenTerminalIsRemembered() {
+    let (p, defaults) = blankPreferences()
+    #expect(p.terminalApp == nil)
+    p.terminalApp = .terminal
+    #expect(p.terminalApp == .terminal && defaults.string(forKey: "terminal.app") == "terminal")
+    defaults.set("ghostty", forKey: "terminal.app")
+    #expect(p.terminalApp == nil)
+}
