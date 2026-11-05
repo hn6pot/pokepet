@@ -1,6 +1,7 @@
 /**
  * What the mod writes about a conversation (the same vocabulary as SessionState.swift).
- * These values and the file keys below are the format shared with the installed app: they stay in French.
+ * These values and the file keys below (`etat`, `majLe`, `pid`, `lien`, plus `job` and `terminal`)
+ * are the format shared with the installed app: they stay as they are.
  */
 export type State = 'travaille' | 'attend' | 'fini' | 'echec' | 'fermee'
 
@@ -29,11 +30,35 @@ export function desktopLink(hostId: string | undefined): string | undefined {
     : undefined
 }
 
+/** The short id of a background job (`claude --bg`), from CLAUDE_JOB_DIR; it ends up in a terminal command, so only this form. */
+export function jobId(jobDir: string | undefined): string | undefined {
+  const last = jobDir?.replace(/\/+$/, '').split('/').pop()
+  return last !== undefined && /^[0-9a-f]{8}$/.test(last) ? last : undefined
+}
+
+/** The terminal a conversation runs in, from TERM_PROGRAM; only the two the app knows how to bring forward. */
+export function terminalName(termProgram: string | undefined): string | undefined {
+  return termProgram === 'iTerm.app' || termProgram === 'Apple_Terminal' ? termProgram : undefined
+}
+
+/** Where the conversation can be reached: the Desktop link, the background job, the terminal. All optional. */
+export interface Origin {
+  link?: string
+  job?: string
+  terminal?: string
+}
+
 /** The content of `sessions/<id>.json`. The time is written without milliseconds: that is what Swift reads. */
-export function sessionContent(state: State, ms: number, pid: number, link: string | undefined): string {
+export function sessionContent(state: State, ms: number, pid: number, origin: Origin): string {
   const updatedAt = new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
-  const content = { etat: state, majLe: updatedAt, pid }
-  return JSON.stringify(link === undefined ? content : { ...content, lien: link })
+  return JSON.stringify({
+    etat: state,
+    majLe: updatedAt,
+    pid,
+    ...(origin.link === undefined ? {} : { lien: origin.link }),
+    ...(origin.job === undefined ? {} : { job: origin.job }),
+    ...(origin.terminal === undefined ? {} : { terminal: origin.terminal }),
+  })
 }
 
 /** The next counter, from the current content of `jour/<date>/<id>.json` (missing or broken: zero). */

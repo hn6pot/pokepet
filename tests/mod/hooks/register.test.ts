@@ -10,7 +10,7 @@ const LINK = 'claude://code/continue?session=local_abc'
  * variables. By default a Desktop conversation (CLAUDE_CODE_ENTRYPOINT=claude-desktop) that is not
  * on screen: no surface attached, as in Desktop when you look at another conversation.
  */
-function world(on: On, options: { entrypoint?: string; brokenWrites?: boolean } = {}) {
+function world(on: On, options: { entrypoint?: string; brokenWrites?: boolean; env?: Record<string, string> } = {}) {
   on('turn.start', (_$, e) => ({ turnId: e.turnId }))
   on('turn.complete', () => ({ text: '' }))
   on('session.end', (_$, e) => ({ sessionId: e.sessionId }))
@@ -31,9 +31,12 @@ function world(on: On, options: { entrypoint?: string; brokenWrites?: boolean } 
   on('process.run', (_$, e) =>
     e.argv.join(' ') === "/bin/sh -c echo $PPID" ? { value: { exitCode: 0, stdout: '4242\n', stderr: '' } } : { deny: 'inattendu' })
   const entrypoint = options.entrypoint ?? 'claude-desktop'
-  mock.env(on, entrypoint === 'claude-desktop'
-    ? { HOME: '/home', CLAUDE_CODE_ENTRYPOINT: entrypoint, CLAUDE_CODE_HOST_SESSION_ID: 'local_abc' }
-    : { HOME: '/home', CLAUDE_CODE_ENTRYPOINT: entrypoint })
+  mock.env(on, {
+    ...(entrypoint === 'claude-desktop'
+      ? { HOME: '/home', CLAUDE_CODE_ENTRYPOINT: entrypoint, CLAUDE_CODE_HOST_SESSION_ID: 'local_abc' }
+      : { HOME: '/home', CLAUDE_CODE_ENTRYPOINT: entrypoint }),
+    ...(options.env ?? {}),
+  })
   mock.clock(on, { now: new Date(2026, 9, 15, 16, 2, 11).getTime() })
   const state = () => (disk.has(SESSION) ? JSON.parse(disk.get(SESSION)!) : undefined)
   const writtenStates = () => writes.filter(x => x.path === SESSION).map(x => x.state)
@@ -167,4 +170,22 @@ test('une écriture qui échoue ne gêne pas la conversation', async ($, on) => 
   world(on, { brokenWrites: true })
   await expect($.turn.start({ text: 'salut', turnId: 't1' })).resolves.toEqual(expect.anything())
   await expect($.turn.complete(end('answer'))).resolves.toEqual(expect.anything())
+})
+
+test('un agent de fond écrit son identifiant de job, sans lien', async ($, on) => {
+  const w = world(on, { entrypoint: 'cli', env: { CLAUDE_JOB_DIR: '/home/.claude/jobs/c5adc286' } })
+  await $.turn.start({ text: 'salut', turnId: 't1' })
+  expect(w.state()).toEqual({ etat: 'travaille', majLe: expect.any(String), pid: 4242, job: 'c5adc286' })
+})
+
+test('un claude lancé dans iTerm écrit son terminal', async ($, on) => {
+  const w = world(on, { entrypoint: 'cli', env: { TERM_PROGRAM: 'iTerm.app' } })
+  await $.turn.start({ text: 'salut', turnId: 't1' })
+  expect(w.state()).toEqual({ etat: 'travaille', majLe: expect.any(String), pid: 4242, terminal: 'iTerm.app' })
+})
+
+test('une conversation Desktop garde son lien, même avec un TERM_PROGRAM', async ($, on) => {
+  const w = world(on, { env: { TERM_PROGRAM: 'Apple_Terminal' } })
+  await $.turn.start({ text: 'salut', turnId: 't1' })
+  expect(w.state()).toEqual({ etat: 'travaille', majLe: expect.any(String), pid: 4242, lien: LINK, terminal: 'Apple_Terminal' })
 })
