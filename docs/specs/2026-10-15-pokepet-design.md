@@ -58,7 +58,7 @@ C'est la seule interface entre le mod et l'app ; les deux côtés le testent.
 ```
 
 - `etat` ∈ `travaille`, `attend`, `fini`, `echec`, `fermee` (sans accents pour éviter les pièges d'encodage).
-- `majLe` : heure UTC ISO 8601. `pid` : processus Claude Code, lu par le mod comme le parent d'un `sh` qu'il lance (`CLAUDE_PID` n'existe que pour les commandes de Claude, vérifié en vrai). `lien` : absent hors Desktop.
+- `majLe` : heure UTC ISO 8601. `pid` : processus Claude Code, lu par le mod comme le parent d'un `sh` qu'il lance (`CLAUDE_PID` n'existe que pour les commandes de Claude, vérifié en vrai). `lien` : absent hors Desktop. Depuis le 05/11/2026, `job` et `terminal` disent où rejoindre une conversation terminal : voir [`2026-11-04-terminal-conversations-design.md`](2026-11-04-terminal-conversations-design.md).
 
 **`~/.pokepet/jour/<AAAA-MM-JJ>/<id>.json`** — `{ "reponses": 12 }`, le compteur du jour de cette conversation.
 Chaque conversation n'écrit que son propre fichier : pas de course entre conversations ; l'app additionne.
@@ -143,7 +143,7 @@ Il ne tremble jamais : quel que soit l'état, il est calme sur place (`Idle`), e
 Au lancement, le compagnon apparaît directement au bon stade, sans flash.
 
 **Gestes** : glisser = déplacer (position retenue) ; molette = taille de 30 à 300 % (100 % = pixels ×3, sans lissage) ;
-clic = ouvre la conversation qui attend si elle a un lien ; sinon il saute et met l'app Claude au premier plan (en la lançant si elle est fermée), ou saute seulement si Claude est déjà devant ; clic droit = menu (nom, « Stade 2/3 », « Réponses aujourd'hui : 12 », « Un autre Pokémon », « Position par défaut », « Taille normale », « Quitter Poképote ») ;
+clic = ouvre la conversation qui attend si elle a un lien ; pour une conversation terminal (bulle « >_ »), voir [`2026-11-04-terminal-conversations-design.md`](2026-11-04-terminal-conversations-design.md) ; sinon il saute et met l'app Claude au premier plan (en la lançant si elle est fermée), ou saute seulement si Claude est déjà devant ; clic droit = menu (nom, « Stade 2/3 », « Réponses aujourd'hui : 12 », « Un autre Pokémon », « Position par défaut », « Taille normale », « Quitter Poképote ») ;
 toute la silhouette est cliquable (le rectangle des pixels visibles de l'image en cours, plus 2 pixels de marge), la bulle aussi ; les clics passent à travers le vide plus loin autour. Sans position retenue (ou si elle est hors de tout écran, ou via « Position par défaut »), le Pokémon lui-même — pas sa fenêtre — se pose à 40 points de la droite et 47 points du bas de la zone utile de l'écran principal (au-dessus du Dock), la place choisie à la main par Bérenger, mesurée sur la fenêtre réelle le 18/10.
 
 **Les lignées** (onze depuis le 20/10, choisies par Bérenger ; au départ deux) : Salamèche → Reptincel → Dracaufeu ; Pichu → Pikachu → Raichu ;

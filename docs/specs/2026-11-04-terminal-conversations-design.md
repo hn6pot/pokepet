@@ -1,6 +1,6 @@
 # Les conversations terminal — spécification
 
-Date : 04/11/2026 · Statut : proposée · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md) et à celle de la barre des menus [`2026-10-20-menu-bar-design.md`](2026-10-20-menu-bar-design.md), qui restent valables.
+Date : 04/11/2026 · Statut : approuvée le 04/11, construite le 05/11 · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md) et à celle de la barre des menus [`2026-10-20-menu-bar-design.md`](2026-10-20-menu-bar-design.md), qui restent valables.
 
 ## 1. Pourquoi
 
