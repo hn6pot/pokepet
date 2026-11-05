@@ -57,16 +57,32 @@ final class SpriteView: NSView {
         let outline = NSBezierPath(ovalIn: circle.insetBy(dx: 1, dy: 1))
         outline.lineWidth = 2
         outline.stroke()
-        // « ! » in red for a Desktop conversation; « >_ » in blue, monospaced, for a conversation in a terminal.
-        let text = bubble == .terminal
-            ? NSAttributedString(string: ">_", attributes: [
-                .font: NSFont.monospacedSystemFont(ofSize: radius * 1.25, weight: .bold), .foregroundColor: NSColor.systemBlue,
-            ])
-            : NSAttributedString(string: "!", attributes: [
-                .font: NSFont.boldSystemFont(ofSize: radius * 1.4), .foregroundColor: NSColor.systemRed,
-            ])
+        if bubble == .terminal {
+            drawPrompt(in: circle)
+            return
+        }
+        let text = NSAttributedString(string: "!", attributes: [
+            .font: NSFont.boldSystemFont(ofSize: radius * 1.4), .foregroundColor: NSColor.systemRed,
+        ])
         let size = text.size()
         text.draw(at: CGPoint(x: circle.midX - size.width / 2, y: circle.midY - size.height / 2))
+    }
+
+    /// The « >_ » of a conversation in a terminal: a chevron and an underscore drawn as strokes, centred by
+    /// construction. No font: measuring a monospaced system font inside `draw` crashed CoreText once (05/11).
+    private func drawPrompt(in circle: CGRect) {
+        let cx = circle.midX, cy = circle.midY, r = circle.width / 2
+        let glyph = NSBezierPath()
+        glyph.lineWidth = max(1.5, r * 0.28)
+        glyph.lineCapStyle = .round
+        glyph.lineJoinStyle = .round
+        glyph.move(to: CGPoint(x: cx - 0.55 * r, y: cy + 0.38 * r))
+        glyph.line(to: CGPoint(x: cx - 0.08 * r, y: cy + 0.02 * r))
+        glyph.line(to: CGPoint(x: cx - 0.55 * r, y: cy - 0.34 * r))
+        glyph.move(to: CGPoint(x: cx + 0.12 * r, y: cy - 0.38 * r))
+        glyph.line(to: CGPoint(x: cx + 0.6 * r, y: cy - 0.38 * r))
+        NSColor.systemBlue.setStroke()
+        glyph.stroke()
     }
 
     /// The visible rectangle of each image already seen (a sheet only has a few images).

@@ -45,7 +45,7 @@ Parmi les sessions `attend` gardées, l'app prend **la plus récente** (`majLe`)
 
 Aujourd'hui, `MostUrgentState` choisit le lien de la session `attend` la plus récente **qui a un lien**. Cette règle devient : la session `attend` la plus récente, point ; sa cible, quelle qu'elle soit. Une Desktop qui attend depuis 10 s passe donc avant un job qui attend depuis une heure, et inversement.
 
-**La bulle « >_ »** : même cercle blanc cerclé de noir, même taille, le texte `>_` en police à chasse fixe grasse (1,25 × le rayon), bleu système, à la place du « ! » rouge. Le saut triple à l'entrée en attente, le rythme (un saut toutes les 20 s) et la zone cliquable ne changent pas.
+**La bulle « >_ »** : même cercle blanc cerclé de noir, même taille ; un chevron et un tiret bas **dessinés en traits** (`NSBezierPath`, bouts ronds, épaisseur 0,28 × le rayon, 1,5 pt au minimum), bleu système, centrés par construction, à la place du « ! » rouge. Pas de police : le 05/11, mesurer un texte en police système à chasse fixe dans `draw` a fait planter CoreText une fois (`TAttributes::ApplyFont`, dictionnaire avec un objet nul), sans reproduction hors de l'app ; et le texte `>_` paraissait décalé dans le cercle. Le saut triple à l'entrée en attente, le rythme (un saut toutes les 20 s) et la zone cliquable ne changent pas.
 
 **Lancer `claude attach`** : par AppleScript, le seul moyen qui marche pour iTerm (vérifié le 04/11 : iTerm n'exécute pas un fichier `.command` ouvert par `open -a iTerm`, Terminal si ; on prend le même mécanisme pour les deux).
 
