@@ -1,13 +1,13 @@
 import AppKit
 import PokepetCore
 
-/// Draws the current image, enlarged without smoothing, the « ! » bubble and the white flash.
+/// Draws the current image, enlarged without smoothing, the « ! » or « >_ » bubble and the white flash.
 /// Forwards the mouse to the `MouseGestures`.
 final class SpriteView: NSView {
     var image: CGImage? { didSet { if image !== oldValue { needsDisplay = true } } }
     /// Screen points per sprite pixel.
     var scale: CGFloat = 3 { didSet { if scale != oldValue { needsDisplay = true } } }
-    var bubble = false { didSet { if bubble != oldValue { needsDisplay = true } } }
+    var bubble: Bubble = .none { didSet { if bubble != oldValue { needsDisplay = true } } }
     /// Opacity of the white flash, from 0 to 1.
     var flash: CGFloat = 0 { didSet { if flash != oldValue { needsDisplay = true } } }
     /// The height kept above the sprite for the bubble.
@@ -39,10 +39,10 @@ final class SpriteView: NSView {
             context.fill(frame)
             context.restoreGState()
         }
-        if bubble { drawBubble() }
+        if bubble != .none { drawBubble() }
     }
 
-    /// The circle of the « ! » bubble, set on top of the sprite.
+    /// The circle of the bubble, set on top of the sprite.
     private var bubbleFrame: CGRect {
         let frame = spriteFrame, radius = 5 * scale
         return CGRect(x: frame.midX - radius, y: frame.maxY, width: radius * 2, height: radius * 2)
@@ -57,11 +57,32 @@ final class SpriteView: NSView {
         let outline = NSBezierPath(ovalIn: circle.insetBy(dx: 1, dy: 1))
         outline.lineWidth = 2
         outline.stroke()
+        if bubble == .terminal {
+            drawPrompt(in: circle)
+            return
+        }
         let text = NSAttributedString(string: "!", attributes: [
             .font: NSFont.boldSystemFont(ofSize: radius * 1.4), .foregroundColor: NSColor.systemRed,
         ])
         let size = text.size()
         text.draw(at: CGPoint(x: circle.midX - size.width / 2, y: circle.midY - size.height / 2))
+    }
+
+    /// The « >_ » of a conversation in a terminal: a chevron and an underscore drawn as strokes, centred by
+    /// construction. No font: measuring a monospaced system font inside `draw` crashed CoreText once (05/11).
+    private func drawPrompt(in circle: CGRect) {
+        let cx = circle.midX, cy = circle.midY, r = circle.width / 2
+        let glyph = NSBezierPath()
+        glyph.lineWidth = max(1.5, r * 0.28)
+        glyph.lineCapStyle = .round
+        glyph.lineJoinStyle = .round
+        glyph.move(to: CGPoint(x: cx - 0.55 * r, y: cy + 0.38 * r))
+        glyph.line(to: CGPoint(x: cx - 0.08 * r, y: cy + 0.02 * r))
+        glyph.line(to: CGPoint(x: cx - 0.55 * r, y: cy - 0.34 * r))
+        glyph.move(to: CGPoint(x: cx + 0.12 * r, y: cy - 0.38 * r))
+        glyph.line(to: CGPoint(x: cx + 0.6 * r, y: cy - 0.38 * r))
+        NSColor.systemBlue.setStroke()
+        glyph.stroke()
     }
 
     /// The visible rectangle of each image already seen (a sheet only has a few images).
@@ -71,7 +92,7 @@ final class SpriteView: NSView {
     /// pixels, plus a 2-pixel margin), or on the bubble.
     func hitsSprite(_ point: CGPoint) -> Bool {
         guard let image else { return false }
-        if bubble && HitArea.isInCircle(point, frame: bubbleFrame) { return true }
+        if bubble != .none && HitArea.isInCircle(point, frame: bubbleFrame) { return true }
         guard let silhouette = silhouette(of: image) else { return false }
         return silhouette.insetBy(dx: -2 * scale, dy: -2 * scale).contains(point)
     }

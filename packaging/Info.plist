@@ -18,6 +18,9 @@
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
+	<!-- A click on the « >_ » bubble opens the waiting conversation in iTerm or Terminal through AppleScript. -->
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Poképote ouvre dans votre terminal la conversation Claude Code qui attend votre réponse.</string>
 	<!-- No Dock icon and no menu bar. -->
 	<key>LSUIElement</key>
 	<true/>

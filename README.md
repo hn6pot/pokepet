@@ -6,7 +6,8 @@
 
 **Poképote** is a Pokémon desk pet that floats above your Mac's windows and shows what Claude Code is doing:
 it goes quietly about its business while Claude works, hops with a "!" bubble when a conversation is waiting for you
-(one click opens it), spins when the work is done, and falls asleep when nothing happens.
+(one click opens it), or with a ">_" bubble when the waiting conversation runs in a terminal, spins when the work is done,
+and falls asleep when nothing happens.
 
 Every morning at 4 a.m., a new baby is drawn from eleven lineages (Charmander, Pichu, Bulbasaur, Squirtle, Cyndaquil,
 Totodile, Dratini, Gastly, Larvitar, Bagon, Magikarp, whose last stage is the red, shiny Gyarados). It evolves after 30, then 80 Claude answers in the day.
@@ -50,7 +51,7 @@ Removes the app, the automatic start, the mod and `~/.pokepet/`.
 
 ## Use
 
-- **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app); otherwise it hops and brings the Claude app to the front.
+- **Click** the Pokémon or its bubble: opens the waiting conversation (desktop app), or, for a background `claude --bg` job, opens your terminal of choice with `claude attach` on it (iTerm2 or Terminal, picked in the Settings tab; the tab also lets you stop following terminal conversations); for a `claude` typed in iTerm or Terminal, brings that terminal to the front; otherwise it hops and brings the Claude app to the front.
 - **Drag**: move it (the position is remembered). **Scroll**: resize it, from 30 to 300 %.
 - **Right-click**: its name, stage, today's answers, "Un autre Pokémon" (another Pokémon for the day, starting again as a baby), "Position par défaut" (back to the bottom-right corner), "Taille normale" (normal size), "Quitter Poképote" (quit).
 - **Menu bar**: the Pokémon of the day also sits in the menu bar. Click it for a small window with two tabs:

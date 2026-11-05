@@ -6,7 +6,8 @@
 
 **Poképote** est un compagnon Pokémon qui flotte au-dessus des fenêtres du Mac et montre ce que fait Claude Code :
 il agit tranquillement quand Claude travaille, saute avec une bulle « ! » quand une conversation t'attend (un clic l'ouvre),
-fait une pirouette quand c'est fini, s'endort quand plus rien ne se passe.
+ou avec une bulle « >_ » quand la conversation qui attend tourne dans un terminal, fait une pirouette quand c'est fini,
+s'endort quand plus rien ne se passe.
 
 Chaque matin à 4 h, un nouveau bébé est tiré parmi onze lignées (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
 Kaiminus, Minidraco, Fantominus, Embrylex, Draby, Magicarpe, qui finit en Léviator rouge, chromatique). Il évolue à 30 puis 80 réponses de Claude dans la journée.
@@ -48,7 +49,7 @@ Enlève l'app, le démarrage automatique, le mod et `~/.pokepet/`.
 
 ## Utiliser
 
-- **Clic** sur le Pokémon ou sa bulle : ouvre la conversation qui attend (app Desktop) ; sinon il saute et met l'app Claude au premier plan.
+- **Clic** sur le Pokémon ou sa bulle : ouvre la conversation qui attend (app Desktop) ; pour un agent de fond `claude --bg`, ouvre ton terminal (iTerm2 ou Terminal, au choix dans l'onglet Réglages, qui permet aussi de ne plus suivre les conversations terminal) avec `claude attach` dedans ; pour un `claude` tapé dans iTerm ou Terminal, met ce terminal au premier plan ; sinon il saute et met l'app Claude au premier plan.
 - **Glisser** : le déplacer (la position est retenue). **Molette** : la taille, de 30 à 300 %.
 - **Clic droit** : son nom, son stade, les réponses du jour, « Un autre Pokémon » (repart bébé, compteur à zéro), « Position par défaut » (retour en bas à droite), « Taille normale », « Quitter Poképote ».
 - **Barre des menus** : le Pokémon du jour s'y trouve aussi. Un clic ouvre une petite fenêtre à deux onglets :

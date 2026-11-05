@@ -31,6 +31,18 @@ public final class Preferences {
         set { defaults.set(newValue, forKey: "compagnon.visible") }
     }
 
+    /// False to stop following conversations that run in a terminal (`claude --bg`, iTerm…); on by default.
+    public var terminalTracking: Bool {
+        get { defaults.object(forKey: "terminal.suivi") == nil ? true : defaults.bool(forKey: "terminal.suivi") }
+        set { defaults.set(newValue, forKey: "terminal.suivi") }
+    }
+
+    /// The terminal that opens a waiting background job; `nil` (absent or unknown) means the app's default.
+    public var terminalApp: TerminalApp? {
+        get { defaults.string(forKey: "terminal.app").flatMap(TerminalApp.init(rawValue:)) }
+        set { defaults.set(newValue?.rawValue, forKey: "terminal.app") }
+    }
+
     /// The lineage picked with « Un autre Pokémon », with its day; `nil` without a choice.
     public var dailyChoice: DailyChoice? {
         get {

@@ -73,7 +73,7 @@ final class Loops {
         let responses = DailyCounter.total(stateDirectory.counters(day: PokepetDay.key(now)))
         dayResponses = responses
         let next = companion.update(
-            now: now, urgency: MostUrgentState.compute(sessions), responses: responses,
+            now: now, urgency: MostUrgentState.compute(sessions, terminalTracking: preferences.terminalTracking), responses: responses,
             lastActivity: sessions.map(\.updatedAt).max(), choice: preferences.dailyChoice)
         let speciesChanged = next.species != appearance?.species
         let rhythmChanged = next.display != appearance?.display || next.asleep != appearance?.asleep
@@ -167,7 +167,7 @@ final class Loops {
         let mouse: CGPoint
         let window: CGPoint
         let image: CGImage?
-        let bubble: Bool
+        let bubble: Bubble
 
         static func == (a: Hover, b: Hover) -> Bool {
             a.mouse == b.mouse && a.window == b.window && a.image === b.image && a.bubble == b.bubble
@@ -266,9 +266,20 @@ final class Loops {
     // MARK: Called by the gestures
 
     func click() {
-        switch ClickRule.action(link: appearance?.link, claudeIsFrontmost: ConversationOpener.claudeIsFrontmost) {
+        let action = ClickRule.action(
+            target: appearance?.target, terminalApp: terminalApp,
+            claudeIsFrontmost: ConversationOpener.claudeIsFrontmost)
+        switch action {
         case .openConversation(let link):
             ConversationOpener.open(link)
+        case .attachJob(let job, let app):
+            // No hop: the terminal comes to the front, as Desktop does. Fallback if it cannot be launched.
+            if !ConversationOpener.attach(job: job, in: app) {
+                play(.hop, times: 1)
+                ConversationOpener.showClaude()
+            }
+        case .showTerminal(let app):
+            if !ConversationOpener.show(app) { play(.hop, times: 1) }
         case .hopAndShowClaude:
             play(.hop, times: 1)
             ConversationOpener.showClaude()
@@ -325,5 +336,24 @@ final class Loops {
             preferences.companionVisible = newValue
             if newValue { window.orderFrontRegardless() } else { window.orderOut(nil) }
         }
+    }
+
+    /// From the « Réglages » tab: whether terminal conversations show the « >_ » bubble. Applied at once.
+    var terminalTracking: Bool {
+        get { preferences.terminalTracking }
+        set {
+            preferences.terminalTracking = newValue
+            reload()
+        }
+    }
+
+    /// From the « Réglages » tab: the terminal that opens a waiting background job. A terminal chosen then
+    /// uninstalled falls back to the default.
+    var terminalApp: TerminalApp {
+        get {
+            guard let chosen = preferences.terminalApp, ConversationOpener.isInstalled(chosen) else { return ConversationOpener.defaultTerminal }
+            return chosen
+        }
+        set { preferences.terminalApp = newValue }
     }
 }

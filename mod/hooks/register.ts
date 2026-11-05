@@ -1,7 +1,7 @@
 import type { EngineInterface, Register } from 'claude-code'
 import { dayKey } from './day'
 import { dayPath, sessionPath } from './paths'
-import { counts, desktopLink, endState, INTERACTIVE_ENTRYPOINTS, nextCounter, sessionContent, type State, WAITING_TOOLS } from './state'
+import { counts, desktopLink, endState, INTERACTIVE_ENTRYPOINTS, jobId, nextCounter, type Origin, sessionContent, type State, terminalName, WAITING_TOOLS } from './state'
 
 // The Claude Code version embedded in the Desktop app (2.1.295) only accepts `$` in functions
 // declared in this file, never through an import: everything that touches `$` lives here,
@@ -48,8 +48,12 @@ async function claudePid($: EngineInterface): Promise<number> {
 /** Writes `~/.pokepet/sessions/<id>.json`. */
 async function writeState($: EngineInterface, state: State): Promise<void> {
   const path = sessionPath(String(await $.env.get('HOME')), await $.session.id())
-  const link = desktopLink(await $.env.get('CLAUDE_CODE_HOST_SESSION_ID'))
-  await $.fs.write(path, sessionContent(state, await $.clock.now(), await claudePid($), link))
+  const origin: Origin = {
+    link: desktopLink(await $.env.get('CLAUDE_CODE_HOST_SESSION_ID')),
+    job: jobId(await $.env.get('CLAUDE_JOB_DIR')),
+    terminal: terminalName(await $.env.get('TERM_PROGRAM')),
+  }
+  await $.fs.write(path, sessionContent(state, await $.clock.now(), await claudePid($), origin))
 }
 
 /** Adds one response to `~/.pokepet/jour/<date>/<id>.json`. */

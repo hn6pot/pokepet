@@ -22,6 +22,12 @@ final class PopoverModel {
     var size = 1.0 {
         didSet { if size != loops.size { loops.setSize(size) } }
     }
+    var terminalTracking = true {
+        didSet { if terminalTracking != loops.terminalTracking { loops.terminalTracking = terminalTracking } }
+    }
+    var terminalApp = TerminalApp.terminal {
+        didSet { if terminalApp != loops.terminalApp { loops.terminalApp = terminalApp } }
+    }
     /// The large animated Pokémon of the header.
     private(set) var headerImages: [NSImage] = []
     private var headerPlayer = FramePlayer(durations: [1], looping: true)
@@ -45,6 +51,8 @@ final class PopoverModel {
         appearance = next
         companionVisible = loops.companionVisible
         size = loops.size
+        terminalTracking = loops.terminalTracking
+        terminalApp = loops.terminalApp
         refreshUsage()
     }
 

@@ -7,29 +7,46 @@ public enum DisplayState: Int, Comparable, Sendable {
     public static func < (a: DisplayState, b: DisplayState) -> Bool { a.rawValue < b.rawValue }
 }
 
+/// Where a click can take you: the Desktop conversation, a background job to attach, or the terminal it runs in.
+public enum ClickTarget: Equatable, Sendable {
+    case desktop(String)
+    case job(String)
+    case terminal(TerminalApp)
+}
+
 /// The state to show, and the conversation to open on click if there is one.
 public struct Urgency: Equatable, Sendable {
     public let display: DisplayState
-    public let link: String?
+    public let target: ClickTarget?
 
-    public init(display: DisplayState, link: String?) {
+    public init(display: DisplayState, target: ClickTarget?) {
         self.display = display
-        self.link = link
+        self.target = target
     }
 
-    public static let resting = Urgency(display: .resting, link: nil)
+    public static let resting = Urgency(display: .resting, target: nil)
 }
 
 public enum MostUrgentState {
 
-    public static func compute(_ sessions: [SessionState]) -> Urgency {
-        guard let worst = sessions.map({ display(for: $0.status) }).max() else { return .resting }
-        guard worst == .waiting else { return Urgency(display: worst, link: nil) }
-        let link = sessions
-            .filter { $0.status == .waiting && $0.link.map(isAccepted) == true }
-            .max { $0.updatedAt < $1.updatedAt }?
-            .link
-        return Urgency(display: .waiting, link: link)
+    /// `terminalTracking` off: a waiting conversation that is not a Desktop one counts as working.
+    public static func compute(_ sessions: [SessionState], terminalTracking: Bool = true) -> Urgency {
+        let shown = sessions.map { (display: display(for: $0, terminalTracking: terminalTracking), session: $0) }
+        guard let worst = shown.map(\.display).max() else { return .resting }
+        guard worst == .waiting else { return Urgency(display: worst, target: nil) }
+        let target = shown
+            .filter { $0.display == .waiting }
+            .max { $0.session.updatedAt < $1.session.updatedAt }
+            .flatMap { target(of: $0.session) }
+        return Urgency(display: .waiting, target: target)
+    }
+
+    /// The link first, then the job, then the terminal.
+    static func target(of session: SessionState) -> ClickTarget? {
+        if let link = session.link, isAccepted(link) { return .desktop(link) }
+        if let job = session.job { return .job(job) }
+        if let terminal = session.terminal { return .terminal(terminal) }
+        return nil
     }
 
     /// Any program can write into ~/.pokepet: only this kind of link is ever opened.
@@ -37,13 +54,16 @@ public enum MostUrgentState {
         link.wholeMatch(of: /claude:\/\/code\/continue\?session=local_[A-Za-z0-9-]{1,64}/) != nil
     }
 
-    static func display(for status: SessionStatus) -> DisplayState {
-        switch status {
-        case .waiting: .waiting
-        case .failed: .failed
-        case .working: .working
-        case .done: .done
-        case .closed: .resting
+    static func display(for session: SessionState, terminalTracking: Bool) -> DisplayState {
+        switch session.status {
+        case .waiting:
+            if terminalTracking { return .waiting }
+            if case .desktop = target(of: session) { return .waiting }
+            return .working
+        case .failed: return .failed
+        case .working: return .working
+        case .done: return .done
+        case .closed: return .resting
         }
     }
 }
