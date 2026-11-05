@@ -12,10 +12,10 @@ private let linkA = "claude://code/continue?session=local_aaaa"
 
 private func update(
     _ c: inout Companion, _ display: DisplayState, at seconds: TimeInterval = 0, responses: Int = 0,
-    activity: TimeInterval? = 0, link: String? = nil
+    activity: TimeInterval? = 0, target: ClickTarget? = nil
 ) -> Appearance {
     c.update(
-        now: t0.addingTimeInterval(seconds), urgency: Urgency(display: display, link: link),
+        now: t0.addingTimeInterval(seconds), urgency: Urgency(display: display, target: target),
         responses: responses, lastActivity: activity.map { t0.addingTimeInterval($0) }, calendar: paris)
 }
 
@@ -30,12 +30,15 @@ func everyStateHasItsAnimation() {
     #expect(update(&c, .failed).base == .idle)
 }
 
-@Test("la bulle et le lien seulement quand une conversation attend")
-func bubbleAndLinkOnlyWhenAConversationWaits() {
+@Test("la bulle « ! » pour Desktop, « >_ » pour un job ou un terminal, rien sinon")
+func theBubbleTellsWhereTheConversationIs() {
     var c = Companion(launchDate: t0)
-    let waiting = update(&c, .waiting, link: linkA)
-    #expect(waiting.bubble && waiting.link == linkA)
-    #expect(!update(&c, .working).bubble)
+    let desktop = update(&c, .waiting, target: .desktop(linkA))
+    #expect(desktop.bubble == .exclamation && desktop.target == .desktop(linkA))
+    #expect(update(&c, .waiting, target: .job("c5adc286")).bubble == .terminal)
+    #expect(update(&c, .waiting, target: .terminal(.iterm)).bubble == .terminal)
+    #expect(update(&c, .waiting).bubble == .exclamation)
+    #expect(update(&c, .working).bubble == .none)
 }
 
 @Test("finir fait tourner une fois, échouer fait mal")
@@ -54,6 +57,8 @@ func startingToWaitMakesThreeHops() {
     _ = update(&c, .working)
     #expect(update(&c, .waiting).interlude == Interlude(movement: .hop, times: 3))
     #expect(update(&c, .waiting).interlude == nil)
+    _ = update(&c, .working)
+    #expect(update(&c, .waiting, target: .job("c5adc286")).interlude == Interlude(movement: .hop, times: 3))
 }
 
 @Test("au lancement, ni interlude ni flash")

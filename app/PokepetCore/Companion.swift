@@ -11,6 +11,11 @@ public struct Interlude: Equatable, Sendable {
     }
 }
 
+/// The bubble above the sprite: « ! » for a Desktop conversation (or one with no target), « >_ » for one in a terminal.
+public enum Bubble: Equatable, Sendable {
+    case none, exclamation, terminal
+}
+
 /// What the app must show at a given moment.
 public struct Appearance: Equatable, Sendable {
     /// The displayed state, which the `Rhythm` reads to pick actions.
@@ -26,12 +31,12 @@ public struct Appearance: Equatable, Sendable {
     public let interlude: Interlude?
     /// The white flash of an evolution or of a new baby.
     public let flash: Bool
-    /// The « ! » bubble when a conversation is waiting.
-    public let bubble: Bool
+    /// The bubble when a conversation is waiting.
+    public let bubble: Bubble
     /// True while it sleeps: it no longer does any action.
     public let asleep: Bool
     /// The conversation to open on click.
-    public let link: String?
+    public let target: ClickTarget?
 }
 
 /// The "brain": from the time, the most urgent state and the daily counter,
@@ -82,8 +87,13 @@ public struct Companion: Sendable {
         // Calm on the spot; the Rhythm makes it do actions from time to time.
         let base: Movement = asleep ? .sleep : .idle
 
+        let bubble: Bubble = switch (display, urgency.target) {
+        case (.waiting, .job), (.waiting, .terminal): .terminal
+        case (.waiting, _): .exclamation
+        default: .none
+        }
         return Appearance(
             display: display, lineage: lineage, species: species, stage: stage, responses: responses, base: base, interlude: interlude,
-            flash: flash, bubble: display == .waiting, asleep: asleep, link: urgency.link)
+            flash: flash, bubble: bubble, asleep: asleep, target: urgency.target)
     }
 }
