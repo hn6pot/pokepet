@@ -151,7 +151,7 @@ Bulbizarre → Herbizarre → Florizarre ; Carapuce → Carabaffe → Tortank ; 
 Minidraco → Draco → Dracolosse ; Fantominus → Spectrum → Ectoplasma ; Embrylex → Ymphect → Tyranocif ; Draby → Drackhaus → Drattak ;
 Magicarpe → Léviator → Léviator rouge (Léviator n'a pas de 3e stade : c'est sa forme chromatique de SpriteCollab, `0130/0000/0001` ; Méga-Léviator n'y a pas de sprites).
 
-**Tirage du jour** : la lignée est tirée de la date de la journée par une fonction de hachage stable (FNV-1a mélangée, modulo le nombre de lignées ; en ajouter une change les bébés des jours à venir).
+**Tirage du jour** : sans remise, par périodes de onze jours (le numéro du jour depuis le 1er janvier 1970, divisé par le nombre de lignées) : les onze lignées sont mélangées dans un ordre propre à la période (Fisher-Yates, graine = hachage stable FNV-1a mélangé du numéro de période), et le jour prend sa place dans cet ordre. Chaque lignée sort donc exactement une fois par période ; en ajouter une change les bébés des jours à venir. Avant le 12/11/2026, c'était un hachage de la date modulo onze : sur un mois, certaines lignées sortaient cinq fois et d'autres jamais.
 Même date, même bébé, même après un redémarrage, sans rien stocker. « Un autre Pokémon » (menu du clic droit) tire au hasard une des neuf autres lignées ; ce choix est retenu dans les réglages pour la journée seulement (jusqu'à 4 h), avec un flash au changement. Le nouveau Pokémon repart de zéro : il évolue sur les réponses comptées depuis le changement, et le menu affiche ce compteur-là. (Le `hashValue` de Swift change à chaque lancement : on ne l'utilise pas.)
 
 **Stade** : 0–29 réponses → bébé, 30–79 → stade 2, 80 et plus → stade 3.
@@ -227,7 +227,7 @@ tests/mod/hooks/<fichier>.test.ts            (`claude plugin test`)
 | Testé | Cas principaux |
 |---|---|
 | Journée (app et mod) | 03:59 le 16 → le 15 ; 04:00 → le 16 ; changement d'heure d'été |
-| Tirage | même date → même lignée ; sur 2026, chaque lignée sort entre 15 et 65 jours ; le bébé change souvent d'un jour à l'autre |
+| Tirage | même date → même lignée ; numéro du jour depuis 1970 ; chaque période de onze jours de 2026 sort les onze lignées, 32 à 35 jours chacune sur l’année ; l'ordre change d'une période à l'autre ; le bébé change souvent d'un jour à l'autre |
 | Stade | 0, 29, 30, 79, 80, 200 |
 | Tri des sessions | 2 h pile, `attend` ancien gardé, `fermee` et pid mort supprimés, JSON cassé ignoré |
 | État le plus urgent | toutes les combinaisons de l'ordre ; le lien vient de la session `attend` |

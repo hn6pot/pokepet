@@ -9,7 +9,7 @@ il agit tranquillement quand Claude travaille, saute avec une bulle « ! » quan
 ou avec une bulle « >_ » quand la conversation qui attend tourne dans un terminal, fait une pirouette quand c'est fini,
 s'endort quand plus rien ne se passe.
 
-Chaque matin à 4 h, un nouveau bébé est tiré parmi onze lignées (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
+Chaque matin à 4 h, un nouveau bébé est tiré parmi onze lignées, chacune sortant une fois par période de onze jours (Salamèche, Pichu, Bulbizarre, Carapuce, Héricendre,
 Kaiminus, Minidraco, Fantominus, Embrylex, Draby, Magicarpe, qui finit en Léviator rouge, chromatique). Il évolue à 30 puis 80 réponses de Claude dans la journée.
 
 ## Comment ça marche
