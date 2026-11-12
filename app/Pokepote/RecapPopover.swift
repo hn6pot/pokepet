@@ -25,9 +25,12 @@ final class RecapPopover: NSObject, NSPopoverDelegate {
             return
         }
         model.refresh()
-        // An accessory app must be active for a click elsewhere to close the window.
-        NSApp.activate()
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        // An accessory app must be active, and the window key, for a click elsewhere to close it.
+        // Activating before `show` is not enough on macOS 14+: the activation is deferred and the
+        // window comes up inactive (greyed). The cooperative `activate()` can be refused: force it.
+        NSApp.activate(ignoringOtherApps: true)
+        popover.contentViewController?.view.window?.makeKey()
     }
 
     func popoverDidShow(_ notification: Notification) {
