@@ -3,6 +3,7 @@ import PokepetCore
 import SwiftUI
 
 /// The « Récap » tab: today's tokens and responses, the month's messages.
+/// Until the first reading of the transcripts is over, the rows show « … » and a line says it is reading.
 struct RecapTab: View {
     let recap: Recap?
 
@@ -15,6 +16,9 @@ struct RecapTab: View {
             label(recap?.monthName.uppercased() ?? "CE MOIS-CI").padding(.top, 8)
             row("Messages envoyés", recap.map { NumberFormat.count($0.messages) })
             row("automatiques (à part)", recap.map { NumberFormat.count($0.automaticMessages) }).foregroundStyle(.secondary)
+            if recap == nil {
+                Text("Lecture des conversations…").font(.caption).foregroundStyle(.secondary).padding(.top, 6)
+            }
             Divider().padding(.vertical, 6)
             Button("Quitter Poképote") { NSApp.terminate(nil) }.buttonStyle(.plain)
         }

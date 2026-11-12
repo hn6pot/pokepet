@@ -57,8 +57,9 @@ final class PopoverModel {
     }
 
     /// Reads the new transcript lines away from the main thread (the first time, the whole month):
-    /// one reading at a time, the window shows « … » until it is over.
-    private func refreshUsage() {
+    /// one reading at a time, the window shows « … » until it is over. Called once at launch,
+    /// so the figures are usually ready when the window first opens.
+    func refreshUsage() {
         guard !scanning else { return }
         scanning = true
         let responses = loops.dayResponses

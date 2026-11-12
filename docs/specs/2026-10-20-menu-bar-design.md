@@ -88,7 +88,7 @@ Le menu du clic droit sur le compagnon **ne change pas**.
 - Les chiffres se mettent à jour **à chaque ouverture de la fenêtre**, puis toutes les minutes tant qu'elle est ouverte.
 - La lecture des journaux est **incrémentale** : on retient, pour chaque fichier, jusqu'où on l'a lu, et les totaux par jour. Les journaux pèsent environ 700 Mo pour le mois d'octobre (360 Mo touchés dans la seule journée du 20) : tout relire à chaque clic est exclu.
 - Les totaux par jour sont gardés dans `~/.pokepet/usage.json` (nouveau fichier, écrit seulement par l'app). Ils survivent à la purge des vieux journaux par Claude Code.
-- La première lecture (tout le mois) se fait en tâche de fond ; en attendant, les lignes affichent « … ». L'interface ne se fige jamais.
+- La première lecture (tout le mois) se fait en tâche de fond, lancée dès le démarrage de l'app (depuis le 12/11/2026 : avant, elle attendait la première ouverture de la fenêtre, et trois jours de conversations à rattraper laissaient la fenêtre sur « … » sans explication) ; en attendant, les lignes affichent « … » et une ligne « Lecture des conversations… » le dit. L'interface ne se fige jamais.
 - Un fichier qui rétrécit ou disparaît : on garde les totaux déjà comptés, on relit le fichier depuis le début s'il a rétréci (en évitant les doublons grâce aux identifiants).
 
 ## 3. Objectifs, non-objectifs, anti-objectifs
