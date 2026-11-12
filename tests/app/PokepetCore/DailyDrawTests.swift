@@ -20,13 +20,36 @@ func hashIsStable() {
     #expect(DailyDraw.fnv1a("a") == 0xE40C_292C)
 }
 
-@Test("sur une année, chaque lignée sort assez souvent")
-func overAYearEveryLineageComesOutOftenEnough() {
-    // Eleven lineages: about 33 days each on average over 2026.
+@Test("le numéro du jour compte depuis le 1er janvier 1970")
+func dayNumberCountsFrom1970() {
+    #expect(DailyDraw.dayNumber("1970-01-01") == 0)
+    #expect(DailyDraw.dayNumber("2000-03-01") == 11_017)
+    #expect(DailyDraw.dayNumber("2026-11-12") == 20_769)
+}
+
+@Test("sur onze jours alignés, chaque lignée sort exactement une fois")
+func overElevenAlignedDaysEveryLineageComesOutExactlyOnce() {
+    let count = Lineage.allCases.count
+    let blocks = Dictionary(grouping: daysOf2026()) { DailyDraw.dayNumber($0) / count }
+    #expect(blocks.count > 30)
+    for (block, keys) in blocks where keys.count == count {
+        #expect(Set(keys.map { DailyDraw.lineage(for: $0) }).count == count, "\(block)")
+    }
+}
+
+@Test("sur une année, chaque lignée sort autant que les autres")
+func overAYearEveryLineageComesOutAsOftenAsTheOthers() {
+    // Eleven lineages, 365 days: 33 full periods, plus a partial one at each end of the year.
     let draws = daysOf2026().map { DailyDraw.lineage(for: $0) }
     for lineage in Lineage.allCases {
-        #expect((15...65).contains(draws.filter { $0 == lineage }.count), "\(lineage)")
+        #expect((32...35).contains(draws.filter { $0 == lineage }.count), "\(lineage)")
     }
+}
+
+@Test("l'ordre change d'une période de onze jours à l'autre")
+func theOrderChangesFromOnePeriodToTheNext() {
+    let orders = (0..<20).map { DailyDraw.order(block: $0) }
+    #expect(Set(orders).count == 20)
 }
 
 @Test("le bébé change souvent d'un jour à l'autre")
