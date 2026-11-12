@@ -24,7 +24,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         loops.start()
         if preferences.companionVisible { window.orderFrontRegardless() }
         self.loops = loops
-        let popover = RecapPopover(model: PopoverModel(loops: loops, sprites: sprites))
+        let model = PopoverModel(loops: loops, sprites: sprites)
+        model.refreshUsage()
+        let popover = RecapPopover(model: model)
         menuBarIcon = MenuBarIcon(sprites: sprites, loops: loops, popover: popover)
     }
 
