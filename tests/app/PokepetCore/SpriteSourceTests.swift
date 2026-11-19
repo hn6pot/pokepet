@@ -4,7 +4,7 @@ import Testing
 @Test("les attaques sont des gestes")
 func theAttacksAreGestures() {
     let attacks: [Movement] = [.attack, .charge, .shoot, .strike, .shock, .lick, .withdraw, .rumble,
-                               .flapAround, .twirl, .dance, .shake, .spAttack, .kick, .bite]
+                               .dance, .shake, .spAttack, .kick, .bite]
     for attack in attacks { #expect(Movement.gestures.contains(attack), "\(attack.rawValue)") }
     #expect(Movement.essentials == [.idle, .walk, .hop, .rotate, .hurt, .sleep])
     #expect(Set(Movement.gestures).isDisjoint(with: Movement.essentials))
@@ -12,6 +12,6 @@ func theAttacksAreGestures() {
 
 @Test("les noms bruts sont ceux de SpriteCollab")
 func theRawNamesAreSpriteCollabs() {
-    #expect(Movement.flapAround.rawValue == "FlapAround")
     #expect(Movement.spAttack.rawValue == "SpAttack")
+    #expect(Movement.lookUp.rawValue == "LookUp")
 }

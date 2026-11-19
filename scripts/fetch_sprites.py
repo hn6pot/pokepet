@@ -24,8 +24,8 @@ POKEMON = {"0004": "Salamèche", "0005": "Reptincel", "0006": "Dracaufeu",
 # The animations every Pokémon must have, then the optional gestures and attacks (Dracaufeu has few gestures).
 ANIMATIONS = ["Idle", "Walk", "Hop", "Rotate", "Hurt", "Sleep"]
 GESTURES = ["Nod", "Pose", "LookUp", "DeepBreath", "Sit", "Swing",
-            "Attack", "Charge", "Shoot", "Strike", "Shock", "Lick", "Withdraw", "Rumble", "FlapAround",
-            "Twirl", "Dance", "Shake", "SpAttack", "Kick", "Bite"]
+            "Attack", "Charge", "Shoot", "Strike", "Shock", "Lick", "Withdraw", "Rumble",
+            "Dance", "Shake", "SpAttack", "Kick", "Bite"]
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 

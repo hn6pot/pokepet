@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import PokepetCore
 
@@ -48,10 +49,21 @@ func everyPokemonHasTheCommonAttacks(species: Species) {
 
 @Test("chaque lignée a son attaque propre", arguments: [
     (Lineage.electric, Movement.shock), (.ghost, .lick), (.water, .withdraw), (.magikarp, .spAttack),
-    (.cyndaquil, .twirl), (.grass, .dance), (.fire, .kick), (.bagon, .rumble),
+    (.grass, .dance), (.fire, .kick), (.bagon, .rumble),
 ])
 func everyLineageHasItsSignatureAttack(lineage: Lineage, movement: Movement) {
     let source = PMDSprites(directory: spritesDirectory)
     let baby = lineage.allSpecies[0]
     #expect(source.animation(movement, species: baby, direction: .front) != nil, "\(baby.name) : \(movement.rawValue)")
+}
+
+// Rotate, Hop and Hurt mean "done", "waiting" and "failed": a gesture that copies one of them would be a false signal.
+@Test("aucun geste ne rejoue une animation de signal", arguments: everySpecies)
+func noGestureReplaysASignalAnimation(species: Species) throws {
+    let data = try Data(contentsOf: spritesDirectory.appending(path: "\(species.number)/AnimData.xml"))
+    let animations = AnimData.parse(data)
+    for gesture in Movement.gestures {
+        guard let pmd = animations[gesture.rawValue] else { continue }
+        #expect(!["Rotate", "Hop", "Hurt"].contains(pmd.sheet), "\(species.name) : \(gesture.rawValue) rejoue \(pmd.sheet)")
+    }
 }
