@@ -36,3 +36,22 @@ func unknownPokemonHasNoAnimationAndNoIdle() {
     let source = PMDSprites(directory: spritesDirectory)
     #expect(source.animationOrIdle(.hop, species: Species(name: "?", number: "9999"), direction: .front) == nil)
 }
+
+// Shoot and Strike are not universal: Pichu has no Shoot, and eight Pokémon have QuickStrike or MultiStrike instead of Strike.
+@Test("chaque Pokémon a les attaques communes", arguments: everySpecies)
+func everyPokemonHasTheCommonAttacks(species: Species) {
+    let source = PMDSprites(directory: spritesDirectory)
+    for movement in [Movement.attack, .charge] {
+        #expect(source.animation(movement, species: species, direction: .front) != nil, "\(species.name) : \(movement.rawValue)")
+    }
+}
+
+@Test("chaque lignée a son attaque propre", arguments: [
+    (Lineage.electric, Movement.shock), (.ghost, .lick), (.water, .withdraw), (.magikarp, .spAttack),
+    (.cyndaquil, .twirl), (.grass, .dance), (.fire, .kick), (.bagon, .rumble),
+])
+func everyLineageHasItsSignatureAttack(lineage: Lineage, movement: Movement) {
+    let source = PMDSprites(directory: spritesDirectory)
+    let baby = lineage.allSpecies[0]
+    #expect(source.animation(movement, species: baby, direction: .front) != nil, "\(baby.name) : \(movement.rawValue)")
+}
