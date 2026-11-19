@@ -1,6 +1,6 @@
 # Les attaques — spécification
 
-Date : 18/11/2026 · Statut : approuvée le 19/11 · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md), dont le tableau « Ce que voit et fait le compagnon » (§ 5.1) reste valable, à une ligne près.
+Date : 18/11/2026 · Statut : approuvée et construite le 19/11 · S'ajoute à la spec principale [`2026-10-15-pokepet-design.md`](2026-10-15-pokepet-design.md), dont le tableau « Ce que voit et fait le compagnon » (§ 5.1) reste valable, à une ligne près.
 
 ## 1. Pourquoi
 
@@ -14,7 +14,8 @@ Les attaques rejoignent les gestes : même tirage au hasard, même rythme (une a
 
 | Animation PMD | Qui l'a | Ce que c'est |
 |---|---|---|
-| `Attack`, `Charge`, `Shoot`, `Strike` | toutes les lignées | l'attaque de base, la concentration, le tir, le coup |
+| `Attack`, `Charge` | toutes les lignées | l'attaque de base, la concentration |
+| `Shoot`, `Strike` | presque toutes (constaté le 19/11 : Pichu n'a pas `Shoot` ; Pichu, Pikachu, Raichu, Carabaffe, Tortank, Draco, Spectrum et Draby ont `QuickStrike` ou `MultiStrike` au lieu de `Strike`) | le tir, le coup |
 | `Shock` | Pichu, Pikachu, Raichu | la décharge |
 | `Lick` | Fantominus, Spectrum, Ectoplasma | la léchouille |
 | `Withdraw` | Carapuce, Carabaffe, Tortank, Dracolosse | rentrer dans sa carapace |
@@ -50,3 +51,4 @@ Aucun geste nouveau au repos ou en attente ; aucun réglage pour couper les atta
 
 - Les tests de `Rhythm` passent tels quels (la liste des gestes est un paramètre) ; un test de `Movement` vérifie que les onze attaques sont dans `gestures`.
 - À la main, après `make install` : Salamèche fait `Kick`, `Attack` ou `Charge` dans les deux premières minutes de travail d'une conversation, et ne tremble pas.
+- Essai du 19/11, app du worktree lancée à la place de l'app installée pendant deux minutes de travail, douze captures : Fantominus animé (onze images distinctes), a évolué en Spectrum pendant l'essai, aucun tremblement, position stable aux promenades près ; une capture montre des étincelles au-dessus de lui, vraisemblablement `Charge`. Une attaque n'a pas été identifiée avec certitude sur des images fixes : à confirmer à l'œil après `make install`.

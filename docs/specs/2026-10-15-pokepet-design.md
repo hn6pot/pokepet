@@ -130,7 +130,7 @@ Il ne tremble jamais : quel que soit l'état, il est calme sur place (`Idle`), e
 
 | Situation | Animation PMD | Comportement |
 |---|---|---|
-| travaille | `Idle` | une action toutes les 15 à 30 s : quelques pas `Walk` (un tiers) ou un geste (`Nod`, `Pose`, `LookUp`, `DeepBreath`, `Sit`, `Swing` ; Dracaufeu n'a que `Swing`) |
+| travaille | `Idle` | une action toutes les 15 à 30 s : quelques pas `Walk` (un tiers) ou un geste (`Nod`, `Pose`, `LookUp`, `DeepBreath`, `Sit`, `Swing` ; Dracaufeu n'a que `Swing`), et depuis le 19/11 une attaque aussi (`Attack`, `Charge`, `Shoot`, `Strike` et celle de la lignée, voir [`2026-11-18-attacks-design.md`](2026-11-18-attacks-design.md)) |
 | repos, fini, échec | `Idle` | une petite promenade toutes les 45 à 90 s ; chaque promenade est un aller-retour : un pas qui l'éloigne de sa place (20 à 80 points), puis un pas qui l'y ramène exactement |
 | repos, fini ou échec, et aucun `majLe` plus récent que 15 min | `Sleep` | immobile, plus aucune action |
 | attend | `Hop` ×3 puis `Idle` + bulle « ! » | trois sauts quand l'attente commence, puis un saut de rappel toutes les 20 s |
