@@ -4,11 +4,19 @@ import CoreGraphics
 public enum Movement: String, CaseIterable, Sendable {
     case idle = "Idle", walk = "Walk", hop = "Hop", rotate = "Rotate", hurt = "Hurt", sleep = "Sleep"
     case nod = "Nod", pose = "Pose", lookUp = "LookUp", deepBreath = "DeepBreath", sit = "Sit", swing = "Swing"
+    case attack = "Attack", charge = "Charge", shoot = "Shoot", strike = "Strike"
+    case shock = "Shock", lick = "Lick", withdraw = "Withdraw", rumble = "Rumble"
+    case dance = "Dance", shake = "Shake", spAttack = "SpAttack", kick = "Kick", bite = "Bite"
 
     /// Those every Pokémon has.
     public static let essentials: [Movement] = [.idle, .walk, .hop, .rotate, .hurt, .sleep]
-    /// The small gestures it makes while working; each Pokémon has some of them (Dracaufeu: Swing).
-    public static let gestures: [Movement] = [.nod, .pose, .lookUp, .deepBreath, .sit, .swing]
+    /// The small gestures and the attacks it makes while working; each Pokémon has some of them
+    /// (every one has Attack and Charge, most have Shoot and Strike; Shock is Pikachu's, Lick Fantominus's…).
+    /// Never an animation that copies Rotate, Hop or Hurt: those mean "done", "waiting" and "failed".
+    public static let gestures: [Movement] = [
+        .nod, .pose, .lookUp, .deepBreath, .sit, .swing,
+        .attack, .charge, .shoot, .strike, .shock, .lick, .withdraw, .rumble, .dance, .shake, .spAttack, .kick, .bite,
+    ]
 }
 
 /// The directions used: the rows of a PMD sheet go in this order
